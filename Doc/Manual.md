@@ -152,7 +152,7 @@ or
 * $id_rsa       => path to id_rsa file
 * $command      => Shell command to execute on target
 
-#### scp_put_with_proxyjump arguments
+#### scp_put_with_proxyjump arguments
 
 * $Proxy    => Proxy server
 * $host     => remote target by name or IP address
