@@ -8,6 +8,9 @@ This lib needs the "php-ssh2" lib to be installed.
 
 ## Changelog
 
+11/03/2024 :
+* Adding methods to the cisco switch class
+
 10/03/2024 :
 * Starting the cisco switch class
 
