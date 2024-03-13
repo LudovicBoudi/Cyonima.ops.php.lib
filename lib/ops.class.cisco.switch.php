@@ -132,8 +132,43 @@ class Ops_class_cisco_switch
         $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
+    public function add_route_basic_auth($host, $login, $password, $network_ip, $mask, $ip_address, $metric_value)
+    {
+        $ssh_con = new Ops_class_ssh();
+        $cmd = "config t\n";
+        $cmd .= "ip route $network_ip $mask $ip_address metric $metric_value\n";
+        $cmd .= "copy running-config startup-config";
+        $output = $ssh_con->ssh_command($host, $login, $password,$cmd);
+        return $output;
+    }
 
-
+    public function add_route_id_rsa($host, $login, $id_rsa_pub, $id_rsa, $network_ip, $mask, $ip_address, $metric_value)
+    {
+        $ssh_con = new Ops_class_ssh();
+        $cmd = "config t\n";
+        $cmd .= "ip route $network_ip $mask $ip_address metric $metric_value\n";
+        $cmd .= "copy running-config startup-config";
+        $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        return $output;
+    }
+    public function add_default_gateway_basic_auth ($host, $login, $password, $gateway)
+    {
+        $ssh_con = new Ops_class_ssh();
+        $cmd = "config t\n";
+        $cmd .= "ip default gateway $gateway\n";
+        $cmd .= "copy running-config startup-config";
+        $output = $ssh_con->ssh_command($host, $login, $password,$cmd);
+        return $output;
+    }
+    public function add_default_gateway_id_rsa ($host, $login, $id_rsa_pub, $id_rsa, $gateway)
+    {
+        $ssh_con = new Ops_class_ssh();
+        $cmd = "config t\n";
+        $cmd .= "ip default gateway $gateway\n";
+        $cmd .= "copy running-config startup-config";
+        $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        return $output;
+    }
     public function __call($method, $arguments)
     {
         if($method == 'add_user')
@@ -209,6 +244,38 @@ class Ops_class_cisco_switch
             else if (count($arguments) == 8)
             {
                 return call_user_func_array(array($this,'set_vlan_ip_address_id_rsa'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'add_route')
+        {
+
+            if(count($arguments) == 6)
+            {
+                return call_user_func_array(array($this,'add_route_basic_auth'), $arguments);
+            }
+            else if (count($arguments) == 7)
+            {
+                return call_user_func_array(array($this,'add_route_id_rsa'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'add_default_gateway')
+        {
+
+            if(count($arguments) == 4)
+            {
+                return call_user_func_array(array($this,'add_default_gateway_basic_auth'), $arguments);
+            }
+            else if (count($arguments) == 5)
+            {
+                return call_user_func_array(array($this,'add_default_gateway_id_rsa'), $arguments);
             }
             else
             {
