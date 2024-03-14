@@ -1,6 +1,6 @@
 # Cyonima.ops.php.lib
 
-Description : Set of PHP class and lib for OPS and Sysadmin for PHP scripting. Most of PHP class and functions you'll find here are designed for remote operations, but you'll find two local libs for none remote little actions.
+*__Description__* : Set of PHP class and lib for OPS and Sysadmin for PHP scripting. Most of PHP class and functions you'll find here are designed for remote operations, but you'll find two local libs for none remote little actions.
 
 ## Requirements
 
