@@ -187,6 +187,55 @@ class Ops_class_cisco_switch
         $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
+
+    public function configure_netflow_basic_auth ($host, $login, $password, $netflow_collector_IP, $interface)
+    {
+        $ssh_con = new Ops_class_ssh();
+        $cmd = "enable\nconfig t\n";
+        $cmd .= "ip flow-export destination $netflow_collector_IP 2055\n";
+        $cmd .= "ip flow-export source $interface\n";
+        $cmd .= "ip flow-export version 5\n";
+        $cmd .= "ip flow-cache timeout active 1\n";
+        $cmd .= "ip flow-cache timeout inactive 15\n";
+        $cmd .= "snmp-server ifindex persist\n";
+        $cmd .= "copy running-config startup-config";
+        $output = $ssh_con->ssh_command($host, $login, $password,$cmd);
+        return $output;
+    }
+    public function configure_netflow_id_rsa ($host, $login, $id_rsa_pub, $id_rsa, $netflow_collector_IP, $interface)
+    {
+        $ssh_con = new Ops_class_ssh();  
+        $cmd = "enable\nconfig t\n";
+        $cmd .= "ip flow-export destination $netflow_collector_IP 2055\n";
+        $cmd .= "ip flow-export source $interface\n";
+        $cmd .= "ip flow-export version 5\n";
+        $cmd .= "ip flow-cache timeout active 1\n";
+        $cmd .= "ip flow-cache timeout inactive 15\n";
+        $cmd .= "snmp-server ifindex persist\n";
+        $cmd .= "copy running-config startup-config";
+        $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        return $output;
+    }
+    public function add_interface_to_netflow_monitoring_basic_auth ($host, $login, $password, $interface)
+    {
+        $ssh_con = new Ops_class_ssh();
+        $cmd = "enable\nconfig t\n";
+        $cmd .= "interface $interface\n";
+        $cmd .= "ip flow ingress\n";
+        $cmd .= "copy running-config startup-config";
+        $output = $ssh_con->ssh_command($host, $login, $password,$cmd);
+        return $output;
+    }
+    public function add_interface_to_netflow_monitoring_id_rsa ($host, $login, $id_rsa_pub, $id_rsa, $interface)
+    {
+        $ssh_con = new Ops_class_ssh();  
+        $cmd = "enable\nconfig t\n";
+        $cmd .= "interface $interface\n";
+        $cmd .= "ip flow ingress\n";
+        $cmd .= "copy running-config startup-config";
+        $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        return $output;
+    }
     public function __call($method, $arguments)
     {
         if($method == 'add_user')
@@ -310,6 +359,38 @@ class Ops_class_cisco_switch
             else if (count($arguments) == 8)
             {
                 return call_user_func_array(array($this,'add_acl_id_rsa'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'configure_netflow')
+        {
+
+            if(count($arguments) == 5)
+            {
+                return call_user_func_array(array($this,'configure_netflow_basic_auth'), $arguments);
+            }
+            else if (count($arguments) == 6)
+            {
+                return call_user_func_array(array($this,'configure_netflow_id_rsa'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'add_interface_to_netflow_monitoring')
+        {
+
+            if(count($arguments) == 4)
+            {
+                return call_user_func_array(array($this,'add_interface_to_netflow_monitoring_basic_auth'), $arguments);
+            }
+            else if (count($arguments) == 5)
+            {
+                return call_user_func_array(array($this,'add_interface_to_netflow_monitoring_id_rsa'), $arguments);
             }
             else
             {

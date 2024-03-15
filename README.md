@@ -8,6 +8,10 @@ __Description :__  *Set of PHP class and lib for OPS and Sysadmin for PHP script
 
 ## Changelog
 
+15/03/2024 :
+* *Adding NetFlow methods to the cisco switch class*
+* *Update of documentation*
+
 14/03/2024 :
 * *Adding methods to the cisco switch class*
 * *Adding the documentation on the cisco switch class*
