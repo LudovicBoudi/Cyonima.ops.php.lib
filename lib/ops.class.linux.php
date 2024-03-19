@@ -39,7 +39,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "echo $sudo_password | sudo systemctl $status $service";
+        $cmd = "echo $sudo_password | sudo -S systemctl $status $service";
         $output = $ssh_con->ssh_command($host, $login, $password,$cmd);
         return $output;
     }
@@ -47,7 +47,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "echo $sudo_password | sudo systemctl $status $service";
+        $cmd = "echo $sudo_password | sudo -S systemctl $status $service";
         $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
@@ -88,7 +88,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "echo $sudo_password | sudo systemctl $status $service";
+        $cmd = "echo $sudo_password | sudo -S systemctl $status $service";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);
         return $output;
     }
@@ -96,7 +96,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "echo $sudo_password | sudo systemctl $status $service";
+        $cmd = "echo $sudo_password | sudo -S systemctl $status $service";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
