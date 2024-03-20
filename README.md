@@ -8,6 +8,9 @@ __Description :__  *Set of PHP class and lib for OPS and Sysadmin for PHP script
 
 ## Changelog
 
+20/03/2024 :
+* *Updating the linux class with systemctl management*
+
 18/03/2024 :
 * *Starting the linux class with systemctl management*
 

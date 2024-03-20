@@ -100,6 +100,95 @@ class Ops_class_linux
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
+    public function __call($method, $arguments)
+    {
+        if($method == 'systemctl')
+        {
+            if(count($arguments) == 5)
+            {
+                return call_user_func_array(array($this,'systemctl_basic_auth'), $arguments);
+            }
+            else if (count($arguments) == 6)
+            {
+                return call_user_func_array(array($this,'systemctl_id_rsa'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'systemctl_with_priviledge_elevation')
+        {
+
+            if(count($arguments) == 5)
+            {
+                return call_user_func_array(array($this,'systemctl_with_priviledge_elevation_basic_auth'), $arguments);
+            }
+            else if (count($arguments) == 6)
+            {
+                return call_user_func_array(array($this,'systemctl_with_priviledge_elevation_id_rsa'), $arguments);
+            }
+            else if (count($arguments) == 7)
+            {
+                return call_user_func_array(array($this,'systemctl_with_priviledge_elevation_basic_auth_with_sudo_password'), $arguments);
+            }
+            else if (count($arguments) == 8)
+            {
+                return call_user_func_array(array($this,'systemctl_with_priviledge_elevation_id_rsa_with_sudo_password'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'systemctl_with_proxyjump')
+        {
+
+            if(count($arguments) == 6)
+            {
+                return call_user_func_array(array($this,'systemctl_basic_auth_with_proxyjump'), $arguments);
+            }
+            else if (count($arguments) == 7)
+            {
+                return call_user_func_array(array($this,'systemctl_id_rsa_with_proxyjump'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'systemctl_with_priviledge_elevation_with_proxyjump')
+        {
+
+            if(count($arguments) == 6)
+            {
+                return call_user_func_array(array($this,'systemctl_with_priviledge_elevation_basic_auth_with_proxyjump'), $arguments);
+            }
+            else if (count($arguments) == 7)
+            {
+                return call_user_func_array(array($this,'systemctl_with_priviledge_elevation_id_rsa_with_proxyjump'), $arguments);
+            }
+            else if (count($arguments) == 8)
+            {
+                return call_user_func_array(array($this,'systemctl_with_priviledge_elevation_basic_auth_with_sudo_password_with_proxyjump'), $arguments);
+            }
+            else if (count($arguments) == 9)
+            {
+                return call_user_func_array(array($this,'systemctl_with_priviledge_elevation_id_rsa_with_sudo_password_with_proxyjump'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else 
+        {
+            return "Unknow method";
+        }
+    }
+
+
 }
+
 
 ?>
