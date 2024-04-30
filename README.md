@@ -8,6 +8,9 @@ __Description :__  *Set of PHP class and lib for OPS and Sysadmin for PHP script
 
 ## Changelog
 
+30/04/2024 :
+* *Updating the linux class with package management*
+
 28/04/2024 :
 * *Updating the linux class with package management*
 
