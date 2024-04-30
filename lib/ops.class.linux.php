@@ -907,8 +907,8 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "apt update";
-        $cmd .= "apt upgrade -y";
+        $cmd = "sudo apt update";
+        $cmd .= "sudo apt upgrade -y";
         $output = $ssh_con->ssh_command($host, $login, $password,$cmd);
         return $output;
     }
@@ -916,8 +916,8 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "apt update";
-        $cmd .= "apt upgrade -y";
+        $cmd = "sudo apt update";
+        $cmd .= "sudo apt upgrade -y";
         $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
@@ -960,8 +960,8 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "apt update";
-        $cmd .= "apt upgrade -y";
+        $cmd = "sudo apt update";
+        $cmd .= "sudo apt upgrade -y";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);
         return $output;
     }
@@ -969,8 +969,8 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "apt update";
-        $cmd .= "apt upgrade -y";
+        $cmd = "sudo apt update";
+        $cmd .= "sudo apt upgrade -y";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
@@ -1013,8 +1013,8 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "zypper refresh";
-        $cmd .= "zypper update -y";
+        $cmd = "sudo zypper refresh";
+        $cmd .= "sudo zypper update -y";
         $output = $ssh_con->ssh_command($host, $login, $password,$cmd);
         return $output;
     }
@@ -1022,8 +1022,8 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "zypper refresh";
-        $cmd .= "zypper update -y";
+        $cmd = "sudo zypper refresh";
+        $cmd .= "sudo zypper update -y";
         $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
@@ -1066,8 +1066,8 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "zypper refresh";
-        $cmd .= "zypper update -y";
+        $cmd = "sudo zypper refresh";
+        $cmd .= "sudo zypper update -y";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);
         return $output;
     }
@@ -1075,8 +1075,8 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "zypper refresh";
-        $cmd .= "zypper update -y";
+        $cmd = "sudo zypper refresh";
+        $cmd .= "sudo zypper update -y";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
@@ -1117,7 +1117,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "yum upgrade -y";
+        $cmd = "sudo yum upgrade -y";
         $output = $ssh_con->ssh_command($host, $login, $password,$cmd);
         return $output;
     }
@@ -1125,7 +1125,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "yum upgrade -y";
+        $cmd = "sudo yum upgrade -y";
         $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
@@ -1166,7 +1166,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "yum upgrade -y";
+        $cmd = "sudo yum upgrade -y";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);
         return $output;
     }
@@ -1174,7 +1174,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "yum upgrade -y";
+        $cmd = "sudo yum upgrade -y";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
@@ -1215,7 +1215,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "dnf upgrade --refresh -y";
+        $cmd = "sudo dnf upgrade --refresh -y";
         $output = $ssh_con->ssh_command($host, $login, $password,$cmd);
         return $output;
     }
@@ -1223,7 +1223,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "dnf upgrade --refresh -y";
+        $cmd = "sudo dnf upgrade --refresh -y";
         $output = $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
@@ -1264,7 +1264,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "dnf upgrade --refresh -y";
+        $cmd = "sudo dnf upgrade --refresh -y";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);
         return $output;
     }
@@ -1272,7 +1272,7 @@ class Ops_class_linux
     {
 
         $ssh_con = new Ops_class_ssh();
-        $cmd = "dnf upgrade --refresh -y";
+        $cmd = "sudo dnf upgrade --refresh -y";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
         return $output;
     }
@@ -1290,6 +1290,296 @@ class Ops_class_linux
         $ssh_con = new Ops_class_ssh();
         $cmd = "echo $sudo_password | sudo -S dnf upgrade --refresh -y";
         $output = $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        return $output;
+    }
+    // Basic ssh remote
+    public function factor_basic_auth($host, $login, $password)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "lsb_release -a";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);        
+        $output .="\n\n\t Section 2-> CPU architecture\n\n";  
+        $cmd = "lscpu";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);       
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "ip a";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);      
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "lspci";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);      
+        $output .="\n\n\t Section 5-> Storage\n\n";  
+        $cmd = "df -h";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);
+        return $output;
+    }
+    public function factor_id_rsa($host, $login, $id_rsa_pub, $id_rsa)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "lsb_release -a";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);       
+        $output .="\n\n\t Section 2-> CPU architecture\n\n";  
+        $cmd = "lscpu";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);      
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "ip a";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);     
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "lspci";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);   
+        $output .="\n\n\t Section 5-> Storage\n\n";  
+        $cmd = "df -h";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        return $output;
+    }
+    public function factor_with_priviledge_elevation_basic_auth($host, $login, $password)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "sudo lsb_release -a";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);    
+        $output .="\n\n\t Section 2-> CPU architecture\n\n";  
+        $cmd = "sudo lscpu";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);      
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "sudo ip a";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);      
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "sudo lspci";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);  
+        $output .="\n\n\t Section 5-> Storage\n\n";  
+        $cmd = "sudo df -h";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);
+        return $output;
+    }
+    public function factor_with_priviledge_elevation_id_rsa($host, $login, $id_rsa_pub, $id_rsa)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "sudo lsb_release -a";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);   
+        $output .="\n\n\t Section 2-> CPU architecture\n\n";  
+        $cmd = "sudo lscpu";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);     
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "sudo ip a";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);     
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "sudo lspci";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);  
+        $output .="\n\n\t Section 5-> Storage\n\n";  
+        $cmd = "sudo df -h";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        return $output;
+    }
+    public function factor_with_priviledge_elevation_basic_auth_with_sudo_password($host, $login, $password, $sudo_password)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "echo $sudo_password | sudo -S lsb_release -a";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd); 
+        $output .="\n\n\t Section 2-> CPU architecture\n\n"; 
+        $cmd = "echo $sudo_password | sudo -S lscpu"; 
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);     
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "echo $sudo_password | sudo -S ip a"; 
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd);    
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "echo $sudo_password | sudo -S lspci"; 
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd); 
+        $output .="\n\n\t Section 5-> Storage\n\n";   
+        $cmd = "echo $sudo_password | sudo -S df -h";
+        $output .= $ssh_con->ssh_command($host, $login, $password,$cmd); 
+        return $output;
+    }
+    public function factor_with_priviledge_elevation_id_rsa_with_sudo_password($host, $login, $id_rsa_pub, $id_rsa, $sudo_password)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "echo $sudo_password | sudo -S lsb_release -a";
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        $output .="\n\n\t Section 2-> CPU architecture\n\n"; 
+        $cmd = "echo $sudo_password | sudo -S lscpu"; 
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);     
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "echo $sudo_password | sudo -S ip a"; 
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);    
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "echo $sudo_password | sudo -S lspci"; 
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        $output .="\n\n\t Section 5-> Storage\n\n";   
+        $cmd = "echo $sudo_password | sudo -S df -h"; 
+        $output .= $ssh_con->ssh_command($host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        return $output;
+    }
+    // ProxyJump ssh remote
+    public function factor_basic_auth_with_proxyjump($proxy, $host, $login, $password)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "lsb_release -a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);       
+        $output .="\n\n\t Section 2-> CPU architecture\n\n";  
+        $cmd = "lscpu";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);     
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "ip a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);      
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "lspci";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);      
+        $output .="\n\n\t Section 5-> Storage\n\n";  
+        $cmd = "df -h"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd); 
+        return $output;
+    }
+    public function factor_id_rsa_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "lsb_release -a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);      
+        $output .="\n\n\t Section 2-> CPU architecture\n\n";  
+        $cmd = "lscpu";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);    
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "ip a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);     
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "lspci";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);     
+        $output .="\n\n\t Section 5-> Storage\n\n";  
+        $cmd = "df -h"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);   
+        return $output;
+    }
+    public function factor_with_priviledge_elevation_basic_auth_with_proxyjump($proxy, $host, $login, $password)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "sudo lsb_release -a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);  
+        $output .="\n\n\t Section 2-> CPU architecture\n\n";  
+        $cmd = "sudo lscpu";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);      
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "sudo ip a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);     
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "sudo lspci"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd); 
+        $output .="\n\n\t Section 5-> Storage\n\n";  
+        $cmd = "sudo df -h";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);
+        return $output;
+    }
+    public function factor_with_priviledge_elevation_id_rsa_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "sudo lsb_release -a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        $output .="\n\n\t Section 2-> CPU architecture\n\n";  
+        $cmd = "sudo lscpu";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);     
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "sudo ip a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);    
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "sudo lspci"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        $output .="\n\n\t Section 5-> Storage\n\n";  
+        $cmd = "sudo df -h";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        return $output;
+    }
+    public function factor_with_priviledge_elevation_basic_auth_with_sudo_password_with_proxyjump($proxy, $host, $login, $password, $sudo_password)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "echo $sudo_password | sudo -S lsb_release -a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);
+        $output .="\n\n\t Section 2-> CPU architecture\n\n"; 
+        $cmd = "echo $sudo_password | sudo -S lscpu"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);    
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "echo $sudo_password | sudo -S ip a"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);   
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "echo $sudo_password | sudo -S lspci"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);
+        $output .="\n\n\t Section 5-> Storage\n\n";   
+        $cmd = "echo $sudo_password | sudo -S df -h"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $password,$cmd);
+        return $output;
+    }
+    public function factor_with_priviledge_elevation_id_rsa_with_sudo_password_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa, $sudo_password)
+    {
+
+        $ssh_con = new Ops_class_ssh();
+        $output ="*****************************************************************************************************\n";
+        $output .="****                                   Factor report                                             ****\n";
+        $output .="*****************************************************************************************************\n";
+        $output .="\n\t Section 1-> system version\n\n"; 
+        $cmd = "echo $sudo_password | sudo -S lsb_release -a";
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);
+        $output .="\n\n\t Section 2-> CPU architecture\n\n"; 
+        $cmd = "echo $sudo_password | sudo -S lscpu"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);   
+        $output .="\n\n\t Section 3-> Network\n\n";  
+        $cmd = "echo $sudo_password | sudo -S ip a"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd);   
+        $output .="\n\n\t Section 4-> PCI devices\n\n";  
+        $cmd = "echo $sudo_password | sudo -S lspci"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd); 
+        $output .="\n\n\t Section 5-> Storage\n\n";   
+        $cmd = "echo $sudo_password | sudo -S df -h"; 
+        $output .= $ssh_con->ssh_command_with_proxyjump($proxy, $host, $login, $id_rsa_pub, $id_rsa,$cmd); 
         return $output;
     }
     public function __call($method, $arguments)
@@ -2522,6 +2812,101 @@ class Ops_class_linux
             else if (count($arguments) == 6)
             {
                 return call_user_func_array(array($this,'dnf_upgrade_with_priviledge_elevation_id_rsa_with_sudo_password_with_proxyjump'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if($method == 'factor')
+        {
+            if(count($arguments) == 3)
+            {
+                return call_user_func_array(array($this,'factor_basic_auth'), $arguments);
+            }
+            else if (count($arguments) == 4)
+            {
+                return call_user_func_array(array($this,'factor_id_rsa'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'factor_with_priviledge_elevation')
+        {
+
+            if(count($arguments) == 3)
+            {
+                return call_user_func_array(array($this,'factor_with_priviledge_elevation_basic_auth'), $arguments);
+            }
+            else if (count($arguments) == 4)
+            {
+                return call_user_func_array(array($this,'factor_with_priviledge_elevation_id_rsa'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'factor_with_priviledge_elevation_with_sudo_password')
+        {
+
+            if (count($arguments) == 4)
+            {
+                return call_user_func_array(array($this,'factor_with_priviledge_elevation_basic_auth_with_sudo_password'), $arguments);
+            }
+            else if (count($arguments) == 5)
+            {
+                return call_user_func_array(array($this,'factor_with_priviledge_elevation_id_rsa_with_sudo_password'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'factor_with_proxyjump')
+        {
+
+            if(count($arguments) == 4)
+            {
+                return call_user_func_array(array($this,'factor_basic_auth_with_proxyjump'), $arguments);
+            }
+            else if (count($arguments) == 5)
+            {
+                return call_user_func_array(array($this,'factor_id_rsa_with_proxyjump'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'factor_with_priviledge_elevation_with_proxyjump')
+        {
+
+            if(count($arguments) == 4)
+            {
+                return call_user_func_array(array($this,'factor_with_priviledge_elevation_basic_auth_with_proxyjump'), $arguments);
+            }
+            else if (count($arguments) == 5)
+            {
+                return call_user_func_array(array($this,'factor_with_priviledge_elevation_id_rsa_with_proxyjump'), $arguments);
+            }
+            else
+            {
+                return "Too many or too few arguments";
+            }
+        }
+        else if ($method == 'factor_with_priviledge_elevation_with_proxyjump_with_sudo_password')
+        {
+
+            if (count($arguments) == 5)
+            {
+                return call_user_func_array(array($this,'factor_with_priviledge_elevation_basic_auth_with_sudo_password_with_proxyjump'), $arguments);
+            }
+            else if (count($arguments) == 6)
+            {
+                return call_user_func_array(array($this,'factor_with_priviledge_elevation_id_rsa_with_sudo_password_with_proxyjump'), $arguments);
             }
             else
             {
