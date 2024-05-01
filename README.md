@@ -4,7 +4,7 @@ __Description :__  *Set of PHP class and lib for OPS and Sysadmin for PHP script
 
 __Project details:__
 
-* Phase 1: *Creation of a set of PHP OPS class and functions to manage a maximum of OPS operation via scripting*
+* Phase 1: *Creation of a set of PHP OPS class and functions to manage a maximum of OPS operations via scripting*
 * Phase 2: *Making all those class and functions callable and manageable by YAML files*
 * Phase 3: *Making all those class and functions callable and manageable by JSON files*
 
