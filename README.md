@@ -2,12 +2,19 @@
 
 __Description :__  *Set of PHP class and lib for OPS and Sysadmin for PHP scripting. Most of PHP class and functions you'll find here are designed for remote operations, but you'll find two local libs for none remote little actions.*
 
+__Project details:__
+
+* Phase 1: *Creation of a set of PHP OPS class and functions to manage a maximum of OPS operation via scripting*
+* Phase 2: *Making all those class and functions callable and manageable by YAML files*
+* Phase 3: *Making all those class and functions callable and manageable by JSON files*
+
 ## Requirements
 
 *This lib needs the "php-ssh2" lib to be installed.*
 
 ## Changelog
 
+__Phase 1__
 
 01/05/2024 :
 * *Updating the linux class with package management*
