@@ -434,6 +434,132 @@ class Cyonima_Ops {
         $output = $this->remote_exec($cmd);
         return $output;
     }
+    public function linux_zypper_uninstall_with_priviledge_elevation(string $package, string $sudo_password)
+    {
+        $cmd = "echo $sudo_password | sudo -S zypper remove -y $package";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_zypper_uninstall_with_priviledge_elevation_no_password(string $package)
+    {
+        $cmd = "sudo zypper remove -y $package";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_yum_uninstall(string $package)
+    {
+        $cmd = "yum remove -y $package";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_yum_uninstall_with_priviledge_elevation(string $package, string $sudo_password)
+    {
+        $cmd = "echo $sudo_password | sudo -S yum remove -y $package";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_yum_uninstall_with_priviledge_elevation_no_password(string $package)
+    {
+        $cmd = "sudo yum remove -y $package";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_dnf_uninstall(string $package)
+    {
+        $cmd = "dnf remove -y $package";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_dnf_uninstall_with_priviledge_elevation(string $package, string $sudo_password)
+    {
+        $cmd = "echo $sudo_password | sudo -S dnf remove -y $package";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_dnf_uninstall_with_priviledge_elevation_no_password(string $package)
+    {
+        $cmd = "sudo dnf remove -y $package";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_apt_upgrade()
+    {
+        $cmd = "apt update";
+        $cmd .= "apt upgrade -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_apt_upgrade_with_priviledge_elevation(string $sudo_password)
+    {
+        $cmd = "echo $sudo_password | sudo -S apt update; apt upgrade -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_apt_upgrade_with_priviledge_elevation_no_password()
+    {;
+        $cmd = "sudo apt update";
+        $cmd .= "sudo apt upgrade -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_zypper_upgrade()
+    {
+        $cmd = "zypper refresh";
+        $cmd .= "zypper update -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_zypper_upgrade_with_priviledge_elevation(string $sudo_password)
+    {
+        $cmd = "echo $sudo_password | sudo -S zypper refresh; zypper update -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_zypper_upgrade_with_priviledge_elevation_no_password()
+    {
+        $cmd = "sudo zypper refresh";
+        $cmd .= "sudo zypper update -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_yum_upgrade()
+    {
+        $cmd = "yum upgrade -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_yum_upgrade_with_priviledge_elevation(string $sudo_password)
+    {
+        $cmd = "echo $sudo_password | sudo -S yum upgrade -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_yum_upgrade_with_priviledge_elevation_no_password()
+    {
+        $cmd = "sudo yum upgrade -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_dnf_upgrade()
+    {
+        $cmd = "dnf upgrade --refresh -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_dnf_upgrade_with_priviledge_elevation(string $sudo_password)
+    {
+        $cmd = "echo $sudo_password | sudo -S dnf upgrade --refresh -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+    public function linux_dnf_upgrade_with_priviledge_elevation_no_password()
+    {
+        $cmd = "sudo dnf upgrade --refresh -y";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+
+
 
 
 }
