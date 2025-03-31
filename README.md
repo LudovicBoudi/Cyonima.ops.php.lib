@@ -16,6 +16,9 @@ __Project details:__
 
 __Phase 1__
 
+31/03/2025 :
+* *Rewritting the code to simplify it*
+
 01/05/2024 :
 * *Updating the linux class with package management*
 
