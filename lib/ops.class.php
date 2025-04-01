@@ -42,6 +42,7 @@ class Cyonima_Ops {
         $this->login = null;
         $this->password = null;
         $this->tunnel = null;
+	$this->Id_RSA_pub = null;
     }
     public function set_proxy (string $IP){
         $this->Proxy = true;
@@ -75,7 +76,7 @@ class Cyonima_Ops {
     public function open_connection(){
         if($this->RSA == false and $this->Proxy == false){
             if(!function_exists("ssh2_connect")) die ("function ssh2_connect does not exist, the lib php-ssh2 might be missing");
-                if (!($this->Connection = ssh2_connect($$this->host, $this->Port))) 
+                if (!($this->Connection = ssh2_connect($this->host, $this->Port))) 
                     {
                         return "connection failed";
                     }
