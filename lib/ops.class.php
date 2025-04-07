@@ -210,6 +210,16 @@ class Cyonima_Ops {
     #############################################################################################################################
     # cisco functions
 
+    public function cisco_host_base_conf(string $hostname, string $location, string $time){
+        $cmd = "enable\nconfig t\n";
+        $cmd .= "hostname $hostname\n";
+        $cmd .= "prompt $hostname>\n";
+        $cmd .= "banner motd c $location c\n";
+        $cmd .= "clock set $time\n";
+        $output = $this->remote_exec($cmd);
+        return $output;
+    }
+
     public function cisco_add_user (string $username, string $userpassword)
     {
         $cmd = "enable\nconfig t\n";

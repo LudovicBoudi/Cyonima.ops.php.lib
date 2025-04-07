@@ -16,6 +16,9 @@ __Project details:__
 
 __Phase 1__
 
+07/04/2025 :
+* *Update cisco functions*
+  
 31/03/2025 :
 * *Rewritting the code to simplify it*
 
