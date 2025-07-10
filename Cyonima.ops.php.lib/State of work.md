@@ -17,7 +17,7 @@
 - [x] Implemented the Linux class with basic functions :
 	- [x] Implemented the basic functions to manage packages on a Linux server (apt, yum, zypper, dnf)
 	- [x] Implemented the basic functions to manage services on a Linux server (systemctl functions)
-	- [ ] Implemented the basic functions to manage users on a Linux server
+	- [x] Implemented the basic functions to manage users on a Linux server
 	- [ ] Implemented the basic functions to manage files on a Linux server
 	- [ ] Implemented the basic functions to manage processes on a Linux server
 	- [ ] Implemented the basic functions to manage logs on a Linux server

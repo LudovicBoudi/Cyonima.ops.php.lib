@@ -7773,11 +7773,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\Cyonima.ops.lib.msbuildproj",
+      "projectUniqueName": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\Cyonima.ops.lib.msbuildproj",
       "projectName": "Cyonima.ops.lib",
-      "projectPath": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\Cyonima.ops.lib.msbuildproj",
+      "projectPath": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\Cyonima.ops.lib.msbuildproj",
       "packagesPath": "C:\\Users\\Ludo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\obj\\",
+      "outputPath": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

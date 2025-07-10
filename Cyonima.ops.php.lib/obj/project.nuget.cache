@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Gkz53WiFvkU=",
+  "dgSpecHash": "0wv0kmsnN1o=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\Cyonima.ops.lib.msbuildproj",
+  "projectFilePath": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\Cyonima.ops.lib.msbuildproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ludo\\.nuget\\packages\\bcrypt.net-next\\4.0.2\\bcrypt.net-next.4.0.2.nupkg.sha512",
     "C:\\Users\\Ludo\\.nuget\\packages\\devsense.php.parser\\8.1.7606\\devsense.php.parser.8.1.7606.nupkg.sha512",

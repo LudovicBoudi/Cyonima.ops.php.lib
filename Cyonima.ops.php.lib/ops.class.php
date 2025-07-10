@@ -577,7 +577,12 @@ class Cyonima_Ops {
         $output = $this->remote_exec($cmd);
         return $output;
     }
-
+    public function linux_add_user(string $username,string $group, string $password) {
+        $cmd = "adduser -m -s /bin/bash $group $username\n";
+        $cmd .= "echo $password | sudo  passwd $username\n";
+        $output = $this->remote_exec($cmd);
+        return $output;
+	}
 
 
 

@@ -1,26 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\",
+  "WorkspaceRootPath": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\classlibrary1\\state of work.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\state of work.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:state of work.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\classlibrary1\\ops.class.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\license||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:license||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\ops.class.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:ops.class.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\classlibrary1\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\classlibrary1\\doc\\php\\openssh.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\doc\\php\\openssh.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:doc\\php\\openssh.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\classlibrary1\\license||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:license||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,13 +34,13 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ops.class.php",
-              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\ops.class.php",
+              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\ops.class.php",
               "RelativeDocumentMoniker": "ops.class.php",
-              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\ops.class.php",
+              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\ops.class.php",
               "RelativeToolTip": "ops.class.php",
-              "ViewState": "AgIAAIkBAAAAAAAAAAAAAAoAAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAABkCAAAAAAAAAAAAAEUCAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
               "WhenOpened": "2025-07-10T19:05:44.207Z",
               "IsPinned": true,
@@ -50,11 +50,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "State of work.md",
-              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\State of work.md",
+              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\State of work.md",
               "RelativeDocumentMoniker": "State of work.md",
-              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\State of work.md",
+              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\State of work.md",
               "RelativeToolTip": "State of work.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADsAAABLAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAwwBMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
               "WhenOpened": "2025-07-10T19:30:27.532Z",
               "IsPinned": true,
@@ -62,39 +62,37 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "README.md",
-              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\README.md",
+              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\README.md",
               "RelativeDocumentMoniker": "README.md",
-              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\README.md",
+              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\README.md",
               "RelativeToolTip": "README.md",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
               "WhenOpened": "2025-07-10T19:12:28.196Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "OpenSSH.md",
-              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\Doc\\PHP\\OpenSSH.md",
-              "RelativeDocumentMoniker": "Doc\\PHP\\OpenSSH.md",
-              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\Doc\\PHP\\OpenSSH.md",
-              "RelativeToolTip": "Doc\\PHP\\OpenSSH.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-07-10T19:11:58.894Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "OpenSSH.md",
+              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\Doc\\PHP\\OpenSSH.md",
+              "RelativeDocumentMoniker": "Doc\\PHP\\OpenSSH.md",
+              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\Doc\\PHP\\OpenSSH.md",
+              "RelativeToolTip": "Doc\\PHP\\OpenSSH.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-07-10T19:11:58.894Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "LICENSE",
-              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\LICENSE",
+              "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\LICENSE",
               "RelativeDocumentMoniker": "LICENSE",
-              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\ClassLibrary1\\LICENSE",
+              "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\LICENSE",
               "RelativeToolTip": "LICENSE",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
