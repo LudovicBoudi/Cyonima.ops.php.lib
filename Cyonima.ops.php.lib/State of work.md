@@ -58,3 +58,8 @@
 - [ ] Implemented the basic functions to manage Kubernetes clusters
 - [ ] Implemented the basic functions to manage OpenStack clouds
 - [ ] Implemented the basic functions to manage VirtualBox virtual machines
+- [ ] Implemented the basic functions to manage Proxmox virtual machines
+- [ ] Implemented the basic functions to manage Hyper-V virtual machines
+- [ ] Implemented the basic functions to manage XenServer virtual machines
+- [ ] Implemented the basic functions to manage Citrix virtual machines
+- [ ] All the project is documented.

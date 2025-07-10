@@ -583,6 +583,39 @@ class Cyonima_Ops {
         $output = $this->remote_exec($cmd);
         return $output;
 	}
+    public function linux_add_user_with_priviledge_elevation(string $username, string $password, string $sudo_password)
+    {
+    $cmd = "echo $sudo_password | sudo -S useradd -m -s /bin/bash $username && echo '$username:$password' | sudo chpasswd";
+    $output = $this->remote_exec($cmd);
+    return $output;
+    }
+
+    public function linux_delete_user(string $username)
+    {
+    $cmd = "sudo userdel -r $username";
+    $output = $this->remote_exec($cmd);
+    return $output;
+    }
+    public function linux_delete_user_with_priviledge_elevation(string $username, string $sudo_password)
+    {
+    $cmd = "echo $sudo_password | sudo -S userdel -r $username";
+    $output = $this->remote_exec($cmd);
+    return $output;
+    }
+    public function linux_change_password_with_priviledge_elevation(string $username, string $new_password, string $sudo_password)
+    {
+    $cmd = "echo $sudo_password | sudo -S bash -c \"echo '$username:$new_password' | chpasswd\"";
+    $output = $this->remote_exec($cmd);
+    return $output;
+    }
+    public function linux_change_password(string $username, string $new_password)
+    {
+    $cmd = "echo '$username:$new_password' | chpasswd";
+    $output = $this->remote_exec($cmd);
+    return $output;
+    }
+
+
 
 
 

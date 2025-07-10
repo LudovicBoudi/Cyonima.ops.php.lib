@@ -1,6 +1,10 @@
 # Cyonima.ops.php.lib
 
-__Description :__  *Set of PHP class and lib for OPS and Sysadmin for PHP scripting. Most of PHP class and functions you'll find here are designed for remote operations, but you'll find two local libs for none remote little actions.*
+__Description :__  *Set of PHP class and lib for OPS and Sysadmin for PHP scripting. Most of PHP class and functions you'll find here are designed for remote operations, but you'll find two local libs for none remote little actions. This project had been moved to Peach Pie on Visual Studio rather than using VS Code to build a more global assembly to support multiple languages*
+__Author :__ *BOUDI Ludovic*
+__License :__ *MIT License*
+__Version :__ *0.1.1*
+
 
 __Project details:__
 
@@ -19,6 +23,7 @@ __Phase 1__
 10/07/2025 :
 * *Migration of the project on Visual Studio with Peach Pie to build a more global assembly*
 * *Adding the to do list of the project*
+* *Adding linux user management functions*
 
 07/04/2025 :
 * *Update cisco functions*
