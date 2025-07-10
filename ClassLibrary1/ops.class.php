@@ -1,6 +1,14 @@
 <?php
 
 use Dba\Connection;
+use php2-ssh2\ssh2_connect;
+use php2-ssh2\ssh2_tunnel;
+use php2-ssh2\ssh2_auth_password;
+use php2-ssh2\ssh2_auth_pubkey_file;
+use php2-ssh2\ssh2_exec;
+use php2-ssh2\ssh2_scp_send;
+use php2-ssh2\ssh2_scp_recv;
+use php2-ssh2\ssh2_disconnect;
 
 function SeekAndReplace($Search,$Replace,$fichier)
 {
