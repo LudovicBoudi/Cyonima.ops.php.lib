@@ -42,7 +42,7 @@ class Cyonima_Ops {
         $this->login = null;
         $this->password = null;
         $this->tunnel = null;
-	$this->Id_RSA_pub = null;
+	    $this->Id_RSA_pub = null;
     }
     public function set_proxy (string $IP){
         $this->Proxy = true;
