@@ -18,6 +18,7 @@ __Phase 1__
 
 10/07/2025 :
 * *Migration of the project on Visual Studio with Peach Pie to build a more global assembly*
+* *Adding the to do list of the project*
 
 07/04/2025 :
 * *Update cisco functions*
