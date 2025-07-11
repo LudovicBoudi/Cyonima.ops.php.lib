@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\ops.class.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:ops.class.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
@@ -13,10 +17,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\doc\\php\\openssh.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
       "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:doc\\php\\openssh.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
-      "RelativeMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0830DB93-8396-437D-9B0B-53E599A6ADBB}|Cyonima.ops.lib.msbuildproj|c:\\users\\ludo\\documents\\dev\\cyonima.ops.php.lib\\cyonima.ops.php.lib\\state of work.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
@@ -30,11 +30,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "ops.class.php",
               "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\ops.class.php",
               "RelativeDocumentMoniker": "ops.class.php",
@@ -61,20 +61,21 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "README.md",
               "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\README.md",
               "RelativeDocumentMoniker": "README.md",
               "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\README.md",
               "RelativeToolTip": "README.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
               "WhenOpened": "2025-07-10T19:12:28.196Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "OpenSSH.md",
               "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\Doc\\PHP\\OpenSSH.md",
               "RelativeDocumentMoniker": "Doc\\PHP\\OpenSSH.md",
@@ -87,7 +88,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "LICENSE",
               "DocumentMoniker": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\LICENSE",
               "RelativeDocumentMoniker": "LICENSE",

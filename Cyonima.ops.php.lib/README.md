@@ -20,6 +20,9 @@ __Project details:__
 
 __Phase 1__
 
+11/07/2025 :
+* *Refactoring of the code to simplify it*
+
 10/07/2025 :
 * *Migration of the project on Visual Studio with Peach Pie to build a more global assembly*
 * *Adding the to do list of the project*
