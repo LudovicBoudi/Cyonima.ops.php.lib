@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "ops.class.php",
               "ToolTip": "C:\\Users\\Ludo\\Documents\\Dev\\Cyonima.ops.php.lib\\Cyonima.ops.php.lib\\ops.class.php",
               "RelativeToolTip": "ops.class.php",
-              "ViewState": "AgIAADoCAAAAAAAAAAAAAEQCAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAAHcBAAAAAAAAAAAAAPwAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
               "WhenOpened": "2025-07-10T19:05:44.207Z",
               "IsPinned": true,
@@ -70,8 +70,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
               "WhenOpened": "2025-07-10T19:12:28.196Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -84,8 +83,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
               "WhenOpened": "2025-07-10T19:11:58.894Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -98,8 +96,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2025-07-10T19:13:21.001Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             }
           ]
         }
