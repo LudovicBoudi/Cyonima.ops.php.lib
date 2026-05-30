@@ -1,0 +1,45 @@
+{
+  "name": "cyonima/ops-lib",
+  "description": "PHP library for infrastructure OPS operations (SSH, SCP, Cisco, Linux management)",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cyonima",
+      "email": "ops@cyonima.dev"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "ext-ssh2": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.0",
+    "phpstan/phpstan": "^1.10",
+    "friendsofphp/php-cs-fixer": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cyonima\\Ops\\": "src/Cyonima/Ops/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Cyonima\\Ops\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "analyze": "phpstan analyze src/",
+    "fix": "php-cs-fixer fix src/ --rules=@PSR12"
+  },
+  "keywords": [
+    "ssh",
+    "scp",
+    "cisco",
+    "linux",
+    "ops",
+    "infrastructure",
+    "remote-execution"
+  ]
+}

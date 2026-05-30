@@ -1,0 +1,23 @@
+# Composer
+composer.lock
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Tests
+phpunit.xml
+coverage/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
