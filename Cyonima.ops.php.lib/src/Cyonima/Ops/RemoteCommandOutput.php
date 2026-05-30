@@ -166,13 +166,26 @@ class RemoteCommandOutput
             return new self('', 'SSH stream error', 1);
         }
 
-        stream_set_blocking($stream, true);
-        $stdout = '';
-        while ($chunk = fread($stream, 4096)) {
-            $stdout .= $chunk;
-        }
-        fclose($stream);
+        $stderrStream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
 
-        return new self($stdout, '', 0);
+        stream_set_blocking($stream, true);
+        if ($stderrStream !== false) {
+            stream_set_blocking($stderrStream, true);
+        }
+
+        $stdout = stream_get_contents($stream);
+        $stderr = $stderrStream !== false ? stream_get_contents($stderrStream) : '';
+
+        $exitCode = ssh2_get_exit_status($stream);
+        if ($exitCode === false) {
+            $exitCode = 0;
+        }
+
+        fclose($stream);
+        if ($stderrStream !== false) {
+            fclose($stderrStream);
+        }
+
+        return new self($stdout, $stderr, $exitCode);
     }
 }

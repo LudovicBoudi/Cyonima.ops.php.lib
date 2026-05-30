@@ -11,7 +11,11 @@ declare(strict_types=1);
 require_once 'vendor/autoload.php';
 
 use Cyonima\Ops\Linux\UbuntuOps;
+use Cyonima\Ops\MacOS\MacOsOps;
 use Cyonima\Ops\Network\CiscoOps;
+use Cyonima\Ops\Windows\WindowsOps;
+use Cyonima\Ops\Windows\WinRmClient;
+use Cyonima\Ops\Windows\WindowsWinRmOps;
 use Cyonima\Ops\Helper\UtilityHelper;
 use Cyonima\Ops\Exception\{ConnectionException, AuthenticationException, ExecutionException};
 
@@ -32,11 +36,11 @@ try {
     
     // Install nginx package
     $output = $ubuntu->installPackage('nginx');
-    echo "Installation output:\n" . $output;
+    echo "Installation output:\n" . $output->getStdout();
     
     // Check service status
     $output = $ubuntu->systemctl('nginx', 'status');
-    echo "Service status:\n" . $output;
+    echo "Service status:\n" . $output->getStdout();
     
     $ubuntu->closeConnection();
     echo "Disconnected\n";
@@ -68,7 +72,7 @@ try {
     
     // Execute a command
     $output = $ubuntu2->remoteExec('uname -a');
-    echo "System info:\n" . $output;
+    echo "System info:\n" . $output->getStdout();
     
     $ubuntu2->closeConnection();
 } catch (Exception $e) {
@@ -91,7 +95,7 @@ try {
     echo "Connected via proxy\n";
     
     $output = $ubuntu3->remoteExec('hostname');
-    echo "Hostname: " . trim($output) . "\n";
+    echo "Hostname: " . $output->getTrimmedOutput() . "\n";
     
     $ubuntu3->closeConnection();
 } catch (Exception $e) {
@@ -127,10 +131,75 @@ try {
 }
 
 // ============================================================================
-// Example 5: Cisco Network Equipment Configuration
+// Example 5: Windows PowerShell over SSH
 // ============================================================================
 
-echo "\n=== Example 5: Cisco Configuration ===\n";
+echo "\n=== Example 5: Windows PowerShell over SSH ===\n";
+
+$windowsSsh = new WindowsOps();
+$windowsSsh->setHost('windows.example.local')
+    ->setCredentials('Administrator', 'password')
+    ->setSshPort(22);
+
+try {
+    $windowsSsh->openConnection();
+    echo "Connected to Windows host via SSH\n";
+
+    $output = $windowsSsh->getWindowsVersion();
+    echo "Windows version:\n" . $output->getStdout() . "\n";
+
+    $output = $windowsSsh->manageService('wuauserv', 'status');
+    echo "Windows Update service status:\n" . $output->getStdout() . "\n";
+
+    $windowsSsh->closeConnection();
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage() . "\n";
+}
+
+// ============================================================================
+// Example 6: Windows native WinRM
+// ============================================================================
+
+echo "\n=== Example 6: Windows native WinRM ===\n";
+
+$winrmClient = new WinRmClient('windows.example.local', 'Administrator', 'password');
+$windowsWinRm = new WindowsWinRmOps($winrmClient);
+
+try {
+    $output = $windowsWinRm->getWindowsVersion();
+    echo "WinRM Windows version:\n" . $output->getStdout() . "\n";
+} catch (Exception $e) {
+    echo "WinRM Error: " . $e->getMessage() . "\n";
+}
+
+// ============================================================================
+// Example 7: macOS PowerShell over SSH
+// ============================================================================
+
+echo "\n=== Example 7: macOS PowerShell over SSH ===\n";
+
+$mac = new MacOsOps();
+$mac->setHost('mac.example.local')
+    ->setCredentials('admin', 'password')
+    ->setSshPort(22);
+
+try {
+    $mac->openConnection();
+    echo "Connected to macOS host via SSH\n";
+
+    $output = $mac->getMacOsVersion();
+    echo "macOS version:\n" . $output->getStdout() . "\n";
+
+    $mac->closeConnection();
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage() . "\n";
+}
+
+// ============================================================================
+// Example 8: Cisco Network Equipment Configuration
+// ============================================================================
+
+echo "\n=== Example 8: Cisco Configuration ===\n";
 
 $cisco = new CiscoOps();
 $cisco->setHost('10.0.0.10')
@@ -157,10 +226,10 @@ try {
 }
 
 // ============================================================================
-// Example 6: User Management
+// Example 9: User Management
 // ============================================================================
 
-echo "\n=== Example 6: User Management ===\n";
+echo "\n=== Example 9: User Management ===\n";
 
 $ubuntu5 = new UbuntuOps();
 $ubuntu5->setHost('192.168.1.50')
@@ -187,10 +256,10 @@ try {
 }
 
 // ============================================================================
-// Example 7: Utility Helper Functions
+// Example 10: Utility Helper Functions
 // ============================================================================
 
-echo "\n=== Example 7: Utility Helper Functions ===\n";
+echo "\n=== Example 10: Utility Helper Functions ===\n";
 
 // Check password strength
 $password = 'MySecureP@ss123';

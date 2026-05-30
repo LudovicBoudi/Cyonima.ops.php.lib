@@ -23,8 +23,27 @@ A modern, well-structured PHP library for infrastructure operations including SS
 - User account management
 - Service management (systemctl)
 - Package installation/removal/upgrade
+- File management (read/write/copy/move/remove)
+- Process management and monitoring
+- Log and journal access
+- Network and route management
+- Firewall support (ufw/firewall-cmd)
+- SELinux and AppArmor status management
 - Password management
 - Privilege escalation (sudo) support
+
+✅ **Windows System Management**
+- PowerShell over SSH support via `WindowsOps`
+- Native WinRM support via `WinRmClient` and `WindowsWinRmOps`
+- Windows service, user, and package management
+- `winget` / `choco` package support
+
+✅ **macOS System Management**
+- PowerShell command execution via SSH
+- Homebrew package installation, removal, and upgrade
+- Service control via `brew services`
+- Local user management via `sysadminctl`
+- System version reporting
 
 ✅ **Modern PHP Standards**
 - PSR-4 autoloading
@@ -45,7 +64,17 @@ composer require cyonima/ops-lib
 
 - PHP 8.0 or higher
 - SSH2 PHP extension (`php-ssh2`)
+- cURL PHP extension (`ext-curl`) for WinRM support
 - Network connectivity to target infrastructure
+
+### Windows Host Preparation
+
+For Windows remote management, the target host must be prepared as follows:
+
+- Enable OpenSSH Server for PowerShell-over-SSH access, or install/configure native WinRM.
+- If using WinRM, allow HTTP/HTTPS traffic on port `5985`/`5986` and configure the Windows WinRM listener.
+- Ensure the account has sufficient privileges for service, user, and package management operations.
+- Install `winget` or `Chocolatey` if you want package installation support on Windows.
 
 ## Quick Start
 
@@ -86,6 +115,102 @@ try {
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
 }
+```
+
+### Linux file and process helpers
+
+```php
+use Cyonima\Ops\Linux\UbuntuOps;
+
+$linux = new UbuntuOps();
+$linux->setHost('192.168.1.100')
+    ->setCredentials('ubuntu', 'password')
+    ->setSshPort(22);
+
+try {
+    $linux->openConnection();
+    $read = $linux->readFile('/var/log/syslog');
+    echo $read->getStdout();
+
+    $linux->writeFile('/tmp/message.txt', 'Hello from Cyonima');
+    $linux->listProcesses('sshd');
+    $linux->getFirewallStatus();
+    $linux->closeConnection();
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+```
+
+### Windows PowerShell over SSH
+
+```php
+use Cyonima\Ops\Windows\WindowsOps;
+
+$windows = new WindowsOps();
+$windows->setHost('windows.example.local')
+    ->setCredentials('Administrator', 'password')
+    ->setSshPort(22);
+
+try {
+    $windows->openConnection();
+    $output = $windows->getWindowsVersion();
+    echo $output->getStdout();
+    $windows->closeConnection();
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+```
+
+### Windows native WinRM
+
+```php
+use Cyonima\Ops\Windows\WinRmClient;
+use Cyonima\Ops\Windows\WindowsWinRmOps;
+
+$client = new WinRmClient('windows.example.local', 'Administrator', 'password');
+$winrm = new WindowsWinRmOps($client);
+
+try {
+    $output = $winrm->getWindowsVersion();
+    echo $output->getStdout();
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+```
+
+### macOS PowerShell over SSH
+
+```php
+use Cyonima\Ops\MacOS\MacOsOps;
+
+$mac = new MacOsOps();
+$mac->setHost('mac.example.local')
+    ->setCredentials('admin', 'password')
+    ->setSshPort(22);
+
+try {
+    $mac->openConnection();
+    $output = $mac->getMacOsVersion();
+    echo $output->getStdout();
+    $mac->closeConnection();
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+```
+
+### RemoteCommandOutput Usage
+
+The library now returns a `RemoteCommandOutput` object for command execution methods. It exposes stdout, stderr, exit code, and helper methods:
+
+```php
+$output = $ops->remoteExec('uname -a');
+if ($output->isSuccessful()) {
+    echo $output->getStdout();
+} else {
+    echo "Command failed (exit " . $output->getExitCode() . "): " . $output->getStderr();
+}
+
+$output->throwIfFailed();
 ```
 
 ### Using a Proxy/Jump Host
@@ -149,6 +274,14 @@ AbstractOps (base class)
     ├── RedhatOps
     ├── CentosOps
     └── RockyOps
+└── Windows/
+    ├── AbstractWindowsOps
+    ├── WindowsOps
+    ├── WinRmClient
+    └── WindowsWinRmOps
+└── MacOS/
+    ├── AbstractMacOsOps
+    └── MacOsOps
 ```
 
 ## Exception Handling
@@ -175,6 +308,20 @@ try {
     echo "General OPS error: " . $e->getMessage();
 }
 ```
+
+## Windows Support
+
+The library now supports Windows management using two modes:
+
+- `WindowsOps`/`AbstractWindowsOps` for PowerShell over SSH
+- `WinRmClient` and `WindowsWinRmOps` for native WinRM over HTTP(S)
+
+Windows support includes:
+
+- service control and status
+- local user creation, deletion, and password management
+- package installation/uninstallation via `winget` or `choco`
+- system version reporting
 
 ## Utility Helpers
 

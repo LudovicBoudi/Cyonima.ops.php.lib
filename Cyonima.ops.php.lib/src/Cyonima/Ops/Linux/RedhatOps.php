@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Cyonima\Ops\Linux;
+
 use Cyonima\Ops\RemoteCommandOutput;
 
 /**
@@ -16,11 +17,11 @@ class RedhatOps extends AbstractLinuxOps
      * Install a package using yum
      *
      * @param string $package Package name
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function installPackage(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("yum install -y $package");
+        return $this->remoteExec('yum install -y ' . self::escapeShellArgument($package));
     }
 
     /**
@@ -28,34 +29,33 @@ class RedhatOps extends AbstractLinuxOps
      *
      * @param string $package Package name
      * @param string $sudoPassword Sudo password
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function installPackageWithPrivilege(string $package, string $sudoPassword): RemoteCommandOutput
     {
-        $cmd = "echo $sudoPassword | sudo -S yum install -y $package";
-        return $this->remoteExec($cmd);
+        return $this->executeWithSudo('yum install -y ' . self::escapeShellArgument($package), $sudoPassword);
     }
 
     /**
      * Install a package with privilege elevation (no password required)
      *
      * @param string $package Package name
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function installPackageWithPrivilegeNoPwd(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("sudo yum install -y $package");
+        return $this->executeWithSudo('yum install -y ' . self::escapeShellArgument($package));
     }
 
     /**
      * Uninstall a package
      *
      * @param string $package Package name
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function uninstallPackage(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("yum remove -y $package");
+        return $this->remoteExec('yum remove -y ' . self::escapeShellArgument($package));
     }
 
     /**
@@ -63,54 +63,52 @@ class RedhatOps extends AbstractLinuxOps
      *
      * @param string $package Package name
      * @param string $sudoPassword Sudo password
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function uninstallPackageWithPrivilege(string $package, string $sudoPassword): RemoteCommandOutput
     {
-        $cmd = "echo $sudoPassword | sudo -S yum remove -y $package";
-        return $this->remoteExec($cmd);
+        return $this->executeWithSudo('yum remove -y ' . self::escapeShellArgument($package), $sudoPassword);
     }
 
     /**
      * Uninstall a package with privilege elevation (no password required)
      *
      * @param string $package Package name
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function uninstallPackageWithPrivilegeNoPwd(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("sudo yum remove -y $package");
+        return $this->executeWithSudo('yum remove -y ' . self::escapeShellArgument($package));
     }
 
     /**
      * Upgrade all packages
      *
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function upgradePackages(): RemoteCommandOutput
     {
-        return $this->remoteExec("yum upgrade -y");
+        return $this->remoteExec('yum upgrade -y');
     }
 
     /**
      * Upgrade all packages with privilege elevation
      *
      * @param string $sudoPassword Sudo password
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function upgradePackagesWithPrivilege(string $sudoPassword): RemoteCommandOutput
     {
-        $cmd = "echo $sudoPassword | sudo -S yum upgrade -y";
-        return $this->remoteExec($cmd);
+        return $this->executeWithSudo('yum upgrade -y', $sudoPassword);
     }
 
     /**
      * Upgrade all packages with privilege elevation (no password required)
      *
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function upgradePackagesWithPrivilegeNoPwd(): RemoteCommandOutput
     {
-        return $this->remoteExec("sudo yum upgrade -y");
+        return $this->executeWithSudo('yum upgrade -y');
     }
 }

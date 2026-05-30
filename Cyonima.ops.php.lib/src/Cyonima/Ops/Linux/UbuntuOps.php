@@ -21,7 +21,7 @@ class UbuntuOps extends AbstractLinuxOps
      */
     public function installPackage(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("apt install -y $package");
+        return $this->remoteExec('apt install -y ' . self::escapeShellArgument($package));
     }
 
     /**
@@ -33,8 +33,7 @@ class UbuntuOps extends AbstractLinuxOps
      */
     public function installPackageWithPrivilege(string $package, string $sudoPassword): RemoteCommandOutput
     {
-        $cmd = "echo $sudoPassword | sudo -S apt install -y $package";
-        return $this->remoteExec($cmd);
+        return $this->executeWithSudo('apt install -y ' . self::escapeShellArgument($package), $sudoPassword);
     }
 
     /**
@@ -45,7 +44,7 @@ class UbuntuOps extends AbstractLinuxOps
      */
     public function installPackageWithPrivilegeNoPwd(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("sudo apt install -y $package");
+        return $this->executeWithSudo('apt install -y ' . self::escapeShellArgument($package));
     }
 
     /**
@@ -56,7 +55,7 @@ class UbuntuOps extends AbstractLinuxOps
      */
     public function uninstallPackage(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("apt remove -y $package");
+        return $this->remoteExec('apt remove -y ' . self::escapeShellArgument($package));
     }
 
     /**
@@ -68,8 +67,7 @@ class UbuntuOps extends AbstractLinuxOps
      */
     public function uninstallPackageWithPrivilege(string $package, string $sudoPassword): RemoteCommandOutput
     {
-        $cmd = "echo $sudoPassword | sudo -S apt remove -y $package";
-        return $this->remoteExec($cmd);
+        return $this->executeWithSudo('apt remove -y ' . self::escapeShellArgument($package), $sudoPassword);
     }
 
     /**
@@ -80,7 +78,7 @@ class UbuntuOps extends AbstractLinuxOps
      */
     public function uninstallPackageWithPrivilegeNoPwd(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("sudo apt remove -y $package");
+        return $this->executeWithSudo('apt remove -y ' . self::escapeShellArgument($package));
     }
 
     /**
@@ -90,8 +88,7 @@ class UbuntuOps extends AbstractLinuxOps
      */
     public function upgradePackages(): RemoteCommandOutput
     {
-        $cmd = "apt update && apt upgrade -y";
-        return $this->remoteExec($cmd);
+        return $this->remoteExec('apt update && apt upgrade -y');
     }
 
     /**
@@ -102,8 +99,8 @@ class UbuntuOps extends AbstractLinuxOps
      */
     public function upgradePackagesWithPrivilege(string $sudoPassword): RemoteCommandOutput
     {
-        $cmd = "echo $sudoPassword | sudo -S apt update && sudo -S apt upgrade -y";
-        return $this->remoteExec($cmd);
+        $cmd = 'apt update && apt upgrade -y';
+        return $this->executeWithSudo($cmd, $sudoPassword);
     }
 
     /**
@@ -113,4 +110,6 @@ class UbuntuOps extends AbstractLinuxOps
      */
     public function upgradePackagesWithPrivilegeNoPwd(): RemoteCommandOutput
     {
-        $cmd = "sudo apt update && sudo apt upgrade -y";
+        return $this->executeWithSudo('apt update && apt upgrade -y');
+    }
+}

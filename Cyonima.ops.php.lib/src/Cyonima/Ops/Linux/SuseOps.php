@@ -21,7 +21,7 @@ class SuseOps extends AbstractLinuxOps
      */
     public function installPackage(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("zypper install -y $package");
+        return $this->remoteExec('zypper install -y ' . self::escapeShellArgument($package));
     }
 
     /**
@@ -29,34 +29,33 @@ class SuseOps extends AbstractLinuxOps
      *
      * @param string $package Package name
      * @param string $sudoPassword Sudo password
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function installPackageWithPrivilege(string $package, string $sudoPassword): RemoteCommandOutput
     {
-        $cmd = "echo $sudoPassword | sudo -S zypper install -y $package";
-        return $this->remoteExec($cmd);
+        return $this->executeWithSudo('zypper install -y ' . self::escapeShellArgument($package), $sudoPassword);
     }
 
     /**
      * Install a package with privilege elevation (no password required)
      *
      * @param string $package Package name
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function installPackageWithPrivilegeNoPwd(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("sudo zypper install -y $package");
+        return $this->executeWithSudo('zypper install -y ' . self::escapeShellArgument($package));
     }
 
     /**
      * Uninstall a package
      *
      * @param string $package Package name
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function uninstallPackage(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("zypper remove -y $package");
+        return $this->remoteExec('zypper remove -y ' . self::escapeShellArgument($package));
     }
 
     /**
@@ -64,56 +63,52 @@ class SuseOps extends AbstractLinuxOps
      *
      * @param string $package Package name
      * @param string $sudoPassword Sudo password
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function uninstallPackageWithPrivilege(string $package, string $sudoPassword): RemoteCommandOutput
     {
-        $cmd = "echo $sudoPassword | sudo -S zypper remove -y $package";
-        return $this->remoteExec($cmd);
+        return $this->executeWithSudo('zypper remove -y ' . self::escapeShellArgument($package), $sudoPassword);
     }
 
     /**
      * Uninstall a package with privilege elevation (no password required)
      *
      * @param string $package Package name
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function uninstallPackageWithPrivilegeNoPwd(string $package): RemoteCommandOutput
     {
-        return $this->remoteExec("sudo zypper remove -y $package");
+        return $this->executeWithSudo('zypper remove -y ' . self::escapeShellArgument($package));
     }
 
     /**
      * Upgrade all packages
      *
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function upgradePackages(): RemoteCommandOutput
     {
-        $cmd = "zypper refresh && zypper update -y";
-        return $this->remoteExec($cmd);
+        return $this->remoteExec('zypper refresh && zypper update -y');
     }
 
     /**
      * Upgrade all packages with privilege elevation
      *
      * @param string $sudoPassword Sudo password
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function upgradePackagesWithPrivilege(string $sudoPassword): RemoteCommandOutput
     {
-        $cmd = "echo $sudoPassword | sudo -S zypper refresh && sudo -S zypper update -y";
-        return $this->remoteExec($cmd);
+        return $this->executeWithSudo('zypper refresh && zypper update -y', $sudoPassword);
     }
 
     /**
      * Upgrade all packages with privilege elevation (no password required)
      *
-     * @return string Command output
+     * @return RemoteCommandOutput
      */
     public function upgradePackagesWithPrivilegeNoPwd(): RemoteCommandOutput
     {
-        $cmd = "sudo zypper refresh && sudo zypper update -y";
-        return $this->remoteExec($cmd);
+        return $this->executeWithSudo('zypper refresh && zypper update -y');
     }
 }

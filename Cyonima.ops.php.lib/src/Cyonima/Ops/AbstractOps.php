@@ -7,14 +7,6 @@ namespace Cyonima\Ops;
 use Cyonima\Ops\Exception\{ConnectionException, AuthenticationException, ExecutionException};
 use Cyonima\Ops\Logger\SimpleLogger;
 use Psr\Log\LoggerInterface;
-use php2-ssh2\ssh2_connect;
-use php2-ssh2\ssh2_tunnel;
-use php2-ssh2\ssh2_auth_password;
-use php2-ssh2\ssh2_auth_pubkey_file;
-use php2-ssh2\ssh2_exec;
-use php2-ssh2\ssh2_scp_send;
-use php2-ssh2\ssh2_scp_recv;
-use php2-ssh2\ssh2_disconnect;
 
 /**
  * Abstract base class for OPS operations on infrastructure components
@@ -337,16 +329,31 @@ abstract class AbstractOps
             throw new ExecutionException("Failed to execute command: $command");
         }
 
-        stream_set_blocking($stream, true);
-        $output = "";
-        while ($chunk = fread($stream, 4096)) {
-            $output .= $chunk;
-        }
-        fclose($stream);
+        $stderrStream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
 
-        $result = new RemoteCommandOutput($output, '', 0);
-        $this->logger->debug("Command executed successfully, output length: {length} bytes", [
-            'length' => strlen($output),
+        stream_set_blocking($stream, true);
+        if ($stderrStream !== false) {
+            stream_set_blocking($stderrStream, true);
+        }
+
+        $stdout = stream_get_contents($stream);
+        $stderr = $stderrStream !== false ? stream_get_contents($stderrStream) : '';
+
+        $exitCode = ssh2_get_exit_status($stream);
+        if ($exitCode === false) {
+            $exitCode = 0;
+        }
+
+        fclose($stream);
+        if ($stderrStream !== false) {
+            fclose($stderrStream);
+        }
+
+        $result = new RemoteCommandOutput($stdout, $stderr, $exitCode);
+        $this->logger->debug("Command executed with exit code {code}, stdout length {stdoutLength}, stderr length {stderrLength}", [
+            'code' => $exitCode,
+            'stdoutLength' => strlen($stdout),
+            'stderrLength' => strlen($stderr),
         ]);
 
         return $result;
@@ -452,5 +459,16 @@ abstract class AbstractOps
     {
         $this->logger = $logger;
         return $this;
+    }
+
+    /**
+     * Escape a shell argument for safe remote execution
+     *
+     * @param string $argument
+     * @return string
+     */
+    protected static function escapeShellArgument(string $argument): string
+    {
+        return escapeshellarg($argument);
     }
 }

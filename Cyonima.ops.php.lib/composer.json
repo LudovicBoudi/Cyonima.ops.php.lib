@@ -11,7 +11,8 @@
   ],
   "require": {
     "php": ">=8.0",
-    "ext-ssh2": "*"
+    "ext-ssh2": "*",
+    "ext-curl": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.0",
