@@ -2,7 +2,6 @@
 
 Dernière mise à jour : 31 mai 2026
 
-**Version anglaise disponible :** [MANUAL.md](MANUAL.md)
 
 Ce manuel est une documentation complète de la bibliothèque Cyonima OPS. Il fournit
 des informations approfondies pour l'installation, la configuration, la compréhension

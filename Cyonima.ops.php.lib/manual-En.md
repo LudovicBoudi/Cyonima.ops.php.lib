@@ -2,7 +2,6 @@
 
 Last updated: June 1, 2026
 
-**French version available:** [manual.md](manual.md)
 
 This manual is comprehensive documentation for the Cyonima OPS library. It provides
 in-depth information for installation, configuration, architecture understanding,
