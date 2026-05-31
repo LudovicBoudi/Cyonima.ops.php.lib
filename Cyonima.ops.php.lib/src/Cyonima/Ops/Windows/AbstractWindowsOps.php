@@ -182,6 +182,76 @@ abstract class AbstractWindowsOps extends AbstractOps
     }
 
     /**
+     * Join the machine to an Active Directory domain
+     *
+     * @param string $domain
+     * @param string $credentialUser
+     * @param string $credentialPassword
+     * @param string|null $ou Optional OU distinguished name
+     * @return RemoteCommandOutput
+     */
+    public function joinDomain(string $domain, string $credentialUser, string $credentialPassword, ?string $ou = null): RemoteCommandOutput
+    {
+        $script = '$pass = ConvertTo-SecureString ' . self::escapePowerShellArgument($credentialPassword) . ' -AsPlainText -Force; ' .
+            '$cred = New-Object System.Management.Automation.PSCredential(' . self::escapePowerShellArgument($credentialUser) . ', $pass); ' .
+            'Add-Computer -DomainName ' . self::escapePowerShellArgument($domain) . ' -Credential $cred -Restart:$false';
+        if ($ou !== null && trim($ou) !== '') {
+            $script .= ' -OUPath ' . self::escapePowerShellArgument($ou);
+        }
+        return $this->remoteExec($this->toPowerShellCommand($script));
+    }
+
+    /**
+     * Create an Active Directory user (requires RSAT/AD module on host)
+     *
+     * @param string $samAccountName
+     * @param string $displayName
+     * @param string $password
+     * @param string|null $ouPath
+     * @return RemoteCommandOutput
+     */
+    public function createAdUser(string $samAccountName, string $displayName, string $password, ?string $ouPath = null): RemoteCommandOutput
+    {
+        $script = 'Import-Module ActiveDirectory; ' .
+            'New-ADUser -Name ' . self::escapePowerShellArgument($displayName) .
+            ' -SamAccountName ' . self::escapePowerShellArgument($samAccountName) .
+            ' -AccountPassword (ConvertTo-SecureString ' . self::escapePowerShellArgument($password) . ' -AsPlainText -Force) -Enabled $true';
+        if ($ouPath !== null && trim($ouPath) !== '') {
+            $script .= ' -Path ' . self::escapePowerShellArgument($ouPath);
+        }
+        return $this->remoteExec($this->toPowerShellCommand($script));
+    }
+
+    /**
+     * Add an existing AD user to a group
+     *
+     * @param string $samAccountName
+     * @param string $groupName
+     * @return RemoteCommandOutput
+     */
+    public function addAdUserToGroup(string $samAccountName, string $groupName): RemoteCommandOutput
+    {
+        $script = 'Import-Module ActiveDirectory; Add-ADGroupMember -Identity ' . self::escapePowerShellArgument($groupName) . ' -Members ' . self::escapePowerShellArgument($samAccountName);
+        return $this->remoteExec($this->toPowerShellCommand($script));
+    }
+
+    /**
+     * Create an Organizational Unit in AD
+     *
+     * @param string $ouName
+     * @param string|null $parentDn
+     * @return RemoteCommandOutput
+     */
+    public function createOrganizationalUnit(string $ouName, ?string $parentDn = null): RemoteCommandOutput
+    {
+        $script = 'Import-Module ActiveDirectory; New-ADOrganizationalUnit -Name ' . self::escapePowerShellArgument($ouName);
+        if ($parentDn !== null && trim($parentDn) !== '') {
+            $script .= ' -Path ' . self::escapePowerShellArgument($parentDn);
+        }
+        return $this->remoteExec($this->toPowerShellCommand($script));
+    }
+
+    /**
      * Read a file from the remote Windows host
      *
      * @param string $path File path

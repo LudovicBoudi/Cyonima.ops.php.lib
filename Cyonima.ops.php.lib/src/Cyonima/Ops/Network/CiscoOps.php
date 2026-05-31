@@ -20,9 +20,9 @@ class CiscoOps extends AbstractOps
      * @param string $hostname Device hostname
      * @param string $location Device location for banner
      * @param string $time Current time to set
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function configureHostBase(string $hostname, string $location, string $time): RemoteCommandOutput
+    public function configureHostBase(string $hostname, string $location, string $time): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "hostname $hostname\n";
@@ -37,9 +37,9 @@ class CiscoOps extends AbstractOps
      *
      * @param string $username Username
      * @param string $password User password
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function addUser(string $username, string $password): RemoteCommandOutput
+    public function addUser(string $username, string $password): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "username $username create\n";
@@ -54,9 +54,9 @@ class CiscoOps extends AbstractOps
      * @param string $vlanNumber VLAN ID
      * @param string $vlanName VLAN name
      * @param string $vlanInterface Interface to assign to VLAN
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function configureVlan(string $vlanNumber, string $vlanName, string $vlanInterface): RemoteCommandOutput
+    public function configureVlan(string $vlanNumber, string $vlanName, string $vlanInterface): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "vlan $vlanNumber\n";
@@ -76,9 +76,9 @@ class CiscoOps extends AbstractOps
      * @param string $vlanNumber VLAN ID
      * @param string $interface Interface module (e.g., "Gi0/0")
      * @param string $interfaceRange Range of ports (e.g., "1 - 10")
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function addInterfaceRangeToVlan(string $vlanNumber, string $interface, string $interfaceRange): RemoteCommandOutput
+    public function addInterfaceRangeToVlan(string $vlanNumber, string $interface, string $interfaceRange): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "interface range $interface/$interfaceRange\n";
@@ -97,7 +97,7 @@ class CiscoOps extends AbstractOps
      * @param string $description Interface description
      * @param string $speed Interface speed
      * @param string $duplexMode Duplex mode (auto, full, half)
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
     public function configureInterface(
         string $interface,
@@ -105,7 +105,7 @@ class CiscoOps extends AbstractOps
         string $description,
         string $speed,
         string $duplexMode
-    ): RemoteCommandOutput {
+    ): string {
         $cmd = "enable\nconfig t\n";
         $cmd .= "interface $type $interface\n";
         $cmd .= "description $description\n";
@@ -123,9 +123,9 @@ class CiscoOps extends AbstractOps
      * @param string $description Interface description
      * @param string $ipAddress IP address
      * @param string $netmask Network mask
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function setVlanIpAddress(string $vlanNumber, string $description, string $ipAddress, string $netmask): RemoteCommandOutput
+    public function setVlanIpAddress(string $vlanNumber, string $description, string $ipAddress, string $netmask): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "int vlan $vlanNumber\n";
@@ -143,9 +143,9 @@ class CiscoOps extends AbstractOps
      * @param string $netmask Network mask
      * @param string $gateway Gateway IP address
      * @param string $metric Route metric value
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function addRoute(string $networkIp, string $netmask, string $gateway, string $metric): RemoteCommandOutput
+    public function addRoute(string $networkIp, string $netmask, string $gateway, string $metric): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "ip route $networkIp $netmask $gateway metric $metric\n";
@@ -157,9 +157,9 @@ class CiscoOps extends AbstractOps
      * Add default gateway
      *
      * @param string $gateway Gateway IP address
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function addDefaultGateway(string $gateway): RemoteCommandOutput
+    public function addDefaultGateway(string $gateway): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "ip default gateway $gateway\n";
@@ -174,9 +174,9 @@ class CiscoOps extends AbstractOps
      * @param string $action Action (permit or deny)
      * @param string $ip IP address
      * @param string $mask Wildcard mask
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function addAclBasic(string $aclNumber, string $action, string $ip, string $mask): RemoteCommandOutput
+    public function addAclBasic(string $aclNumber, string $action, string $ip, string $mask): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "access-list $aclNumber $action $ip $mask\n";
@@ -189,9 +189,9 @@ class CiscoOps extends AbstractOps
      *
      * @param string $collectorIp IP address of NetFlow collector
      * @param string $sourceInterface Interface to use as source
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function configureNetflow(string $collectorIp, string $sourceInterface): RemoteCommandOutput
+    public function configureNetflow(string $collectorIp, string $sourceInterface): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "ip flow-export destination $collectorIp 2055\n";
@@ -208,9 +208,9 @@ class CiscoOps extends AbstractOps
      * Enable NetFlow monitoring on an interface
      *
      * @param string $interface Interface to monitor
-     * @return RemoteCommandOutput Command output
+     * @return string Command output
      */
-    public function addInterfaceToNetflowMonitoring(string $interface): RemoteCommandOutput
+    public function addInterfaceToNetflowMonitoring(string $interface): string
     {
         $cmd = "enable\nconfig t\n";
         $cmd .= "interface $interface\n";

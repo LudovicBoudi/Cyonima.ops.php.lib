@@ -1,5 +1,8 @@
 # Cyonima OPS PHP Library
 
+[![PHPUnit](https://img.shields.io/badge/CI-GitHub%20Actions-blue.svg)](https://github.com/LudovicBoudi/Cyonima.ops.php.lib/actions/workflows/phpunit.yml)
+[![Coverage Status](https://img.shields.io/badge/coverage-codecov-yellow.svg)](https://codecov.io/gh/LudovicBoudi/Cyonima.ops.php.lib)
+
 A modern, well-structured PHP library for infrastructure operations including SSH/SCP connectivity and automated management of Cisco network equipment and various Linux distributions.
 
 ## Features
@@ -19,7 +22,7 @@ A modern, well-structured PHP library for infrastructure operations including SS
 - Route management
 
 ✅ **Linux System Management**
-- Support for multiple distributions (Ubuntu, Debian, SUSE, Fedora, Red Hat, CentOS, Rocky)
+- Support for multiple distributions (Ubuntu, Debian, SUSE, Fedora, Red Hat, CentOS, Rocky, Linux Mint, Zorin OS)
 - User account management
 - Service management (systemctl)
 - Package installation/removal/upgrade
@@ -32,10 +35,44 @@ A modern, well-structured PHP library for infrastructure operations including SS
 - Password management
 - Privilege escalation (sudo) support
 
+✅ **BSD System Management**
+- Support for FreeBSD and OpenBSD
+- Package management via `pkg` (FreeBSD) and `pkg_add` / `pkg_delete` (OpenBSD)
+- User, service, and file management over SSH
+- Process, network, and firewall helper methods
+- Shared POSIX shell helper implementations across BSD and Linux
+
+✅ **Azure Cloud Management**
+- Basic Azure CLI management helpers over SSH
+- Resource group, subscription, VM and CLI version helpers
+- Remote Azure CLI execution orchestration for automation
+- Support for service principal login and resource operations
+
+✅ **OpenStack Cloud Management**
+- Basic OpenStack CLI management helpers over SSH
+- Project, flavor, image, network and server helpers
+- Remote OpenStack execution orchestration for automation
+- Support for identity-based authentication via OpenStack credentials
+
+✅ **GCP Cloud Management**
+- Basic gcloud CLI management helpers over SSH
+- Project, region, zone and compute instance helpers
+- Remote Google Cloud execution orchestration for automation
+- Support for service account authentication and project configuration
+
+✅ **AWS Cloud Management**
+- Basic AWS CLI management helpers over SSH
+- Profile, region, EC2 instance and resource helpers
+- Remote AWS execution orchestration for automation
+- Support for credential configuration and instance lifecycle management
+
 ✅ **Windows System Management**
 - PowerShell over SSH support via `WindowsOps`
 - Native WinRM support via `WinRmClient` and `WindowsWinRmOps`
-- Windows service, user, and package management
+- Windows service, user, and file management
+- Process and event log helpers
+- Network and route inspection / route creation
+- Firewall rule and profile management
 - `winget` / `choco` package support
 
 ✅ **macOS System Management**
@@ -141,6 +178,124 @@ try {
 }
 ```
 
+
+### Linux Mint and Zorin OS examples
+
+These distributions are Ubuntu derivatives and are supported via `LinuxMintOps` and `ZorinOps` which reuse the `UbuntuOps` implementations.
+
+```php
+use Cyonima\Ops\Linux\LinuxMintOps;
+use Cyonima\Ops\Linux\ZorinOps;
+
+$mint = new LinuxMintOps();
+$mint->setHost('mint.example.local')->setCredentials('user','pass')->setSshPort(22);
+$mint->openConnection();
+$mint->installPackage('htop');
+$mint->closeConnection();
+
+$zorin = new ZorinOps();
+$zorin->setHost('zorin.example.local')->setCredentials('user','pass')->setSshPort(22);
+$zorin->openConnection();
+$zorin->upgradePackages();
+$zorin->closeConnection();
+```
+
+### FreeBSD and OpenBSD examples
+
+Les plateformes BSD sont prises en charge via `FreeBsdOps` et `OpenBsdOps`. Ces classes implémentent un wrapper SSH/BSD qui utilise les outils de gestion de paquets et utilisateur natifs de chaque OS.
+
+```php
+use Cyonima\Ops\Bsd\FreeBsdOps;
+use Cyonima\Ops\Bsd\OpenBsdOps;
+
+$freebsd = new FreeBsdOps();
+$freebsd->setHost('freebsd.example.local')->setCredentials('root','password')->setSshPort(22);
+$freebsd->openConnection();
+$freebsd->installPackage('nginx');
+$freebsd->closeConnection();
+
+$openbsd = new OpenBsdOps();
+$openbsd->setHost('openbsd.example.local')->setCredentials('root','password')->setSshPort(22);
+$openbsd->openConnection();
+$openbsd->installPackage('nginx');
+$openbsd->closeConnection();
+```
+
+### Azure CLI examples
+
+Un hôte distant peut utiliser Azure CLI pour piloter les ressources Azure via SSH. Installez `az` sur la machine distante avant d'utiliser ces helpers.
+
+```php
+use Cyonima\Ops\Azure\AzureOps;
+
+$azure = new AzureOps();
+$azure->setHost('azure-proxy.example.local')->setCredentials('ops','password')->setSshPort(22);
+$azure->openConnection();
+$azure->loginWithServicePrincipal('TENANT_ID', 'CLIENT_ID', 'CLIENT_SECRET');
+$azure->setSubscription('YOUR_SUBSCRIPTION_ID');
+$azure->createResourceGroup('my-rg', 'westeurope');
+$azure->createVirtualMachine('my-vm', 'my-rg');
+$azure->closeConnection();
+```
+
+### OpenStack CLI examples
+
+Un hôte distant peut utiliser le client OpenStack pour piloter des ressources OpenStack via SSH. Installez `openstack` sur la machine distante avant d'utiliser ces helpers.
+
+```php
+use Cyonima\Ops\OpenStack\OpenStackOps;
+
+$openstack = new OpenStackOps();
+$openstack->setHost('openstack-proxy.example.local')->setCredentials('ops','password')->setSshPort(22);
+$openstack->openConnection();
+$openstack->setOpenStackAuthentication(
+    'https://openstack.example.local:5000/v3',
+    'demo',
+    'admin',
+    'secret'
+);
+$openstack->authenticate();
+$openstack->listServers();
+$openstack->createServer('my-vm', 'Ubuntu20.04', 'm1.small', 'private-net', 'my-key');
+$openstack->closeConnection();
+```
+
+### GCP CLI examples
+
+Un hôte distant peut utiliser Google Cloud SDK pour piloter des ressources GCP via SSH. Installez `gcloud` sur la machine distante avant d'utiliser ces helpers.
+
+```php
+use Cyonima\Ops\Gcp\GcpOps;
+
+$gcp = new GcpOps();
+$gcp->setHost('gcp-proxy.example.local')->setCredentials('ops','password')->setSshPort(22);
+$gcp->openConnection();
+$gcp->authenticateWithServiceAccountKey('/tmp/service-account.json');
+$gcp->setProject('my-gcp-project');
+$gcp->applyProject();
+$gcp->listInstances('europe-west1-b');
+$gcp->createInstance('my-instance', 'europe-west1-b', 'e2-medium', 'ubuntu-2004-lts', 'ubuntu-os-cloud', 'default');
+$gcp->closeConnection();
+```
+
+### AWS CLI examples
+
+Un hôte distant peut utiliser AWS CLI pour piloter des ressources AWS via SSH. Installez `aws` sur la machine distante avant d'utiliser ces helpers.
+
+```php
+use Cyonima\Ops\Aws\AwsOps;
+
+$aws = new AwsOps();
+$aws->setHost('aws-proxy.example.local')->setCredentials('ops','password')->setSshPort(22);
+$aws->setProfile('default');
+$aws->setRegion('eu-west-1');
+$aws->openConnection();
+$aws->configureCredentials('AKIAEXAMPLE', 'secret-key', 'eu-west-1');
+$aws->listInstances('eu-west-1a');
+$aws->createInstance('my-instance', 'ami-12345678', 't3.micro', 'subnet-01234567', 'my-key', 'sg-01234567');
+$aws->closeConnection();
+```
+
 ### Windows PowerShell over SSH
 
 ```php
@@ -153,8 +308,16 @@ $windows->setHost('windows.example.local')
 
 try {
     $windows->openConnection();
-    $output = $windows->getWindowsVersion();
-    echo $output->getStdout();
+    $version = $windows->getWindowsVersion();
+    echo $version->getStdout();
+
+    $file = $windows->readFile('C:\\temp\\example.log');
+    echo $file->getStdout();
+
+    $windows->writeFile('C:\\temp\\message.txt', 'Hello from Cyonima');
+    $rules = $windows->getFirewallRules();
+    echo $rules->getStdout();
+
     $windows->closeConnection();
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
@@ -377,6 +540,8 @@ $ops->setHost('10.0.0.1')
 | Red Hat / RHEL | yum | `RedhatOps` | ✅ Supported |
 | CentOS | yum/dnf | `CentosOps` | ✅ Supported |
 | Rocky Linux | dnf | `RockyOps` | ✅ Supported |
+| Linux Mint | apt (Ubuntu derivative) | `LinuxMintOps` | ✅ Supported |
+| Zorin OS | apt (Ubuntu derivative) | `ZorinOps` | ✅ Supported |
 
 ## API Documentation
 
@@ -439,4 +604,54 @@ Contributions are welcome. Please ensure code follows PSR-12 standards and inclu
 ## Support
 
 For issues, questions, or contributions, please contact the development team or submit an issue in the repository.
+
+## Windows Advanced Modules
+
+The project includes higher-level Windows modules for common infrastructure tasks. These modules are implemented as small helpers that call PowerShell cmdlets remotely (SSH or WinRM) and return `RemoteCommandOutput` objects.
+
+- `IISOps`: install and manage IIS sites and application pools (`installIIS`, `createWebsite`, `startWebsite`, `stopWebsite`, `recycleAppPool`).
+- `SQLServerOps`: run T-SQL queries via `Invoke-Sqlcmd` (`runQuery`).
+- `HyperVOps`: basic Hyper-V VM lifecycle helpers (`createVM`, `startVM`, `stopVM`, `removeVM`).
+- Active Directory helpers in `AbstractWindowsOps`: `joinDomain`, `createAdUser`, `addAdUserToGroup`, `createOrganizationalUnit`.
+- `ExchangeOps` and `SharePointOps`: skeleton helpers for Exchange/SharePoint management (requires target server modules and privileges).
+
+Example: install IIS and create a website
+
+```php
+use Cyonima\Ops\Windows\IISOps;
+
+$iis = new IISOps();
+$iis->setHost('windows.example.local')->setCredentials('Administrator','password')->setSshPort(22);
+$iis->openConnection();
+$iis->installIIS();
+$iis->createWebsite('MySite', 'C:\\inetpub\\wwwroot\\mysite', 8080);
+$iis->startWebsite('MySite');
+$iis->closeConnection();
+```
+
+Example: run a SQL query
+
+```php
+use Cyonima\Ops\Windows\SQLServerOps;
+
+$sql = new SQLServerOps();
+$sql->setHost('sql.example.local')->setCredentials('sa','secret')->setSshPort(22);
+$sql->openConnection();
+$sql->runQuery('localhost\\SQLEXPRESS', 'master', 'SELECT TOP 1 name FROM sys.databases');
+$sql->closeConnection();
+```
+
+Example: join AD domain
+
+```php
+use Cyonima\Ops\Windows\WindowsOps;
+
+$win = new WindowsOps();
+$win->setHost('winjoin.example.local')->setCredentials('Administrator','password')->setSshPort(22);
+$win->openConnection();
+$win->joinDomain('corp.example.local', 'corp\\admin', 'AdminP@ssw0rd');
+$win->closeConnection();
+```
+
+Security note: these helpers invoke powerful system cmdlets and often require elevated privileges on the target host. Ensure you run them in a controlled environment and validate inputs to avoid accidental changes.
 
