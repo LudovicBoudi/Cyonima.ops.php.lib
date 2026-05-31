@@ -66,6 +66,27 @@ A modern, well-structured PHP library for infrastructure operations including SS
 - Remote AWS execution orchestration for automation
 - Support for credential configuration and instance lifecycle management
 
+✅ **KVM/libvirt Management**
+- Basic virsh command-line management over SSH
+- Virtual machine lifecycle helpers (create, start, stop, delete)
+- Network and storage pool management
+- VM resource configuration (CPU, memory)
+- Support for local and remote KVM hypervisors
+
+✅ **VirtualBox Management**
+- Basic VBoxManage command-line management over SSH
+- Virtual machine lifecycle helpers (create, start, stop, delete)
+- Disk and network management
+- VM resource configuration (CPU, memory)
+- VM cloning support
+
+✅ **Proxmox VE Management**
+- Proxmox qm and pvesh command-line management over SSH
+- Virtual machine and container lifecycle helpers
+- Snapshot and migration support
+- Cluster and storage management
+- VM resource configuration (CPU, memory, disk resizing)
+
 ✅ **Windows System Management**
 - PowerShell over SSH support via `WindowsOps`
 - Native WinRM support via `WinRmClient` and `WindowsWinRmOps`
@@ -294,6 +315,69 @@ $aws->configureCredentials('AKIAEXAMPLE', 'secret-key', 'eu-west-1');
 $aws->listInstances('eu-west-1a');
 $aws->createInstance('my-instance', 'ami-12345678', 't3.micro', 'subnet-01234567', 'my-key', 'sg-01234567');
 $aws->closeConnection();
+```
+
+### KVM/libvirt management examples
+
+Un hôte KVM distant peut être géré via `virsh` sur SSH. Assurez-vous que libvirt est installé et accessible sur la machine distante.
+
+```php
+use Cyonima\Ops\Kvm\KvmOps;
+
+$kvm = new KvmOps();
+$kvm->setHost('kvm-host.example.local')->setCredentials('root','password')->setSshPort(22);
+$kvm->openConnection();
+$kvm->listVMs();
+$kvm->createVm('my-vm', '2', '2048', '/var/lib/libvirt/images/my-vm.qcow2');
+$kvm->startVm('my-vm');
+$kvm->getVmStatus('my-vm');
+$kvm->setVmCpu('my-vm', '4');
+$kvm->setVmMemory('my-vm', '4096');
+$kvm->stopVm('my-vm');
+$kvm->closeConnection();
+```
+
+### VirtualBox management examples
+
+Un hôte VirtualBox distant peut être géré via `VBoxManage` sur SSH. Assurez-vous que VirtualBox est installé et accessible sur la machine distante.
+
+```php
+use Cyonima\Ops\Virtualbox\VirtualboxOps;
+
+$vbox = new VirtualboxOps();
+$vbox->setHost('vbox-host.example.local')->setCredentials('vboxuser','password')->setSshPort(22);
+$vbox->openConnection();
+$vbox->listVMs();
+$vbox->listRunningVMs();
+$vbox->createVm('test-vm', 'Ubuntu_64', '2048', '2');
+$vbox->createAndAttachDisk('test-vm', '/var/vbox/test-vm.vdi', '40000');
+$vbox->startVm('test-vm', 'headless');
+$vbox->setVmCpu('test-vm', '4');
+$vbox->setVmMemory('test-vm', '4096');
+$vbox->stopVm('test-vm');
+$vbox->closeConnection();
+```
+
+### Proxmox VE management examples
+
+Un cluster Proxmox distant peut être géré via `qm` et `pvesh` sur SSH. Assurez-vous que les outils Proxmox sont installés et accessibles.
+
+```php
+use Cyonima\Ops\Proxmox\ProxmoxOps;
+
+$proxmox = new ProxmoxOps();
+$proxmox->setHost('proxmox-node.example.local')->setCredentials('root','password')->setSshPort(22);
+$proxmox->openConnection();
+$proxmox->getProxmoxVersion();
+$proxmox->listNodes();
+$proxmox->listVMs();
+$proxmox->createVm('100', 'test-vm', '2048', '2', 'local:0');
+$proxmox->startVm('100');
+$proxmox->setVmCpu('100', '4');
+$proxmox->setVmMemory('100', '4096');
+$proxmox->createSnapshot('100', 'backup-2026-06-01');
+$proxmox->stopVm('100');
+$proxmox->closeConnection();
 ```
 
 ### Windows PowerShell over SSH
@@ -654,4 +738,40 @@ $win->closeConnection();
 ```
 
 Security note: these helpers invoke powerful system cmdlets and often require elevated privileges on the target host. Ensure you run them in a controlled environment and validate inputs to avoid accidental changes.
+
+## Documentation
+
+Complete documentation is available in multiple languages:
+
+- **[manual.md](manual.md)** — Full documentation in French (Français)
+- **[MANUAL.md](MANUAL.md)** — Full documentation in English
+
+Both documents cover installation, architecture, API references, security best practices, troubleshooting, and comprehensive examples for all supported platforms.
+
+## Testing
+
+Run the test suite:
+
+```bash
+composer install
+vendor/bin/phpunit --configuration phpunit.xml
+```
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Ensure tests pass and code follows PSR-12
+4. Submit a pull request
+
+## License
+
+This library is provided as-is. See LICENSE for details.
+
+## Support
+
+For issues, questions, or contributions, please open an issue on the project repository.
+
 

@@ -38,6 +38,12 @@
 	- [x] gcloud CLI management helpers via `GcpOps`
 - [x] AWS operations base class `AbstractAwsOps`
 	- [x] AWS CLI management helpers via `AwsOps`
+- [x] KVM operations base class `AbstractKvmOps`
+	- [x] virsh management helpers via `KvmOps`
+- [x] VirtualBox operations base class `AbstractVirtualboxOps`
+	- [x] VBoxManage management helpers via `VirtualboxOps`
+- [x] Proxmox operations base class `AbstractProxmoxOps`
+	- [x] qm and pvesh management helpers via `ProxmoxOps`
 - [x] `README.md` updated with multi-platform usage examples
 
 ### In progress / short-term improvements
@@ -64,16 +70,6 @@
  - [x] Windows: add firewall helpers (`New-NetFirewallRule`, `Set-NetFirewallProfile`)
  - [x] Windows: add Active Directory helpers for domain/OU/user management
  - [x] Windows: add IIS, SQL Server and Hyper-V helpers as separate modules
-- [x] Add unit/integration tests for `WindowsOps`, `WindowsWinRmOps`, `MacOsOps`, `AbstractLinuxOps` (partial coverage added)
-
-### Future modules / roadmap
-- [ ] VMware module (`ESXi`, `vCenter`, VMs, storage, networking, snapshots)
-- [ ] Juniper switch support
-- [ ] StormShield, Fortinet, Palo Alto firewall support
-- [ ] KVM/QEMU VM management
-- [ ] Docker container management
-- [ ] Kubernetes cluster management
-- [ ] VirtualBox, Proxmox, Hyper-V, XenServer, Citrix platform modules
 
 ### Notes
 - The codebase is currently focused on SSH-based remote execution and generic OS helpers.

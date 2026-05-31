@@ -2,6 +2,8 @@
 
 Dernière mise à jour : 31 mai 2026
 
+**Version anglaise disponible :** [MANUAL.md](MANUAL.md)
+
 Ce manuel est une documentation complète de la bibliothèque Cyonima OPS. Il fournit
 des informations approfondies pour l'installation, la configuration, la compréhension
 de l'architecture, l'utilisation des API, des exemples opérationnels, les bonnes
@@ -25,6 +27,9 @@ Table des matières
   - 4.7 OpenStack (AbstractOpenStackOps, OpenStackOps)
   - 4.8 GCP (AbstractGcpOps, GcpOps)
   - 4.9 AWS (AbstractAwsOps, AwsOps)
+  - 4.10 KVM/libvirt (AbstractKvmOps, KvmOps)
+  - 4.11 VirtualBox (AbstractVirtualboxOps, VirtualboxOps)
+  - 4.12 Proxmox (AbstractProxmoxOps, ProxmoxOps)
 - 5. Utilisation détaillée et exemples (avec snippets)
   - 5.1 Connexion SSH et exécution
   - 5.2 Transfert de fichiers (SCP)
@@ -36,6 +41,9 @@ Table des matières
   - 5.8 OpenStack CLI examples
   - 5.9 GCP CLI examples
   - 5.10 AWS CLI examples
+  - 5.11 KVM/libvirt examples
+  - 5.12 VirtualBox examples
+  - 5.13 Proxmox examples
 - 6. Sécurité, validation et échappement
 - 7. Tests, couverture et CI (GitHub Actions)
 - 8. Dépannage et diagnostics
@@ -207,6 +215,39 @@ utilisent `sudo` ou `executeWithSudo()` selon le cas.
 - `AwsOps` est la classe concrète pour des usages directs.
 - Ces helpers supposent que l'AWS CLI est installé et accessible sur la
   machine distante.
+
+4.10 KVM/libvirt
+
+- `AbstractKvmOps` fournit une couche d'exécution virsh CLI via SSH.
+- Helpers inclus : `getVirshVersion`, `listVMs`, `getVmStatus`, `getVmInfo`,
+  `startVm`, `stopVm`, `destroyVm`, `deleteVm`, `createVm`, `setVmCpu`,
+  `setVmMemory`, `listNetworks`, `listStoragePools`.
+- `KvmOps` est la classe concrète pour des usages directs.
+- Ces helpers supposent que libvirt et virsh sont installés et accessibles sur la
+  machine distante.
+
+4.11 VirtualBox
+
+- `AbstractVirtualboxOps` fournit une couche d'exécution VBoxManage CLI via SSH.
+- Helpers inclus : `getVirtualboxVersion`, `listVMs`, `listRunningVMs`, `getVmStatus`,
+  `getVmInfo`, `startVm`, `stopVm`, `powerOffVm`, `deleteVm`, `createVm`,
+  `setVmCpu`, `setVmMemory`, `createAndAttachDisk`, `listNetworks`,
+  `cloneVm`.
+- `VirtualboxOps` est la classe concrète pour des usages directs.
+- Ces helpers supposent que VirtualBox et VBoxManage sont installés et accessibles
+  sur la machine distante.
+
+4.12 Proxmox
+
+- `AbstractProxmoxOps` fournit une couche d'exécution Proxmox qm et pvesh CLI via SSH.
+- Helpers inclus : `getProxmoxVersion`, `listNodes`, `listVMs`, `getVmStatus`,
+  `getVmConfig`, `startVm`, `stopVm`, `killVm`, `deleteVm`, `createVm`,
+  `setVmCpu`, `setVmMemory`, `resizeDisk`, `migrateVm`, `listStorages`,
+  `getClusterStatus`, `cloneVm`, `createSnapshot`, `listSnapshots`,
+  `rollbackSnapshot`.
+- `ProxmoxOps` est la classe concrète pour des usages directs.
+- Ces helpers supposent que Proxmox VE est installé avec accès aux outils qm et
+  pvesh sur la machine distante.
 
 5. Utilisation détaillée et exemples
 -----------------------------------
@@ -403,6 +444,78 @@ $aws->configureCredentials('AKIAEXAMPLE', 'secret-key', 'eu-west-1');
 $aws->listInstances('eu-west-1a');
 $aws->createInstance('my-instance', 'ami-12345678', 't3.micro', 'subnet-01234567', 'my-key', 'sg-01234567');
 $aws->closeConnection();
+```
+
+5.11 KVM/libvirt examples
+
+Pour utiliser KVM via SSH, assurez-vous que libvirt et virsh sont installés sur la
+machine distante, puis utilisez `KvmOps` pour gérer les machines virtuelles.
+
+```php
+use Cyonima\Ops\Kvm\KvmOps;
+
+$kvm = new KvmOps();
+$kvm->setHost('kvm-host.example.local')->setCredentials('root','password')->setSshPort(22);
+$kvm->openConnection();
+$kvm->getVirshVersion();
+$kvm->listVMs();
+$kvm->createVm('my-vm', '2', '2048', '/var/lib/libvirt/images/my-vm.qcow2');
+$kvm->startVm('my-vm');
+$kvm->getVmStatus('my-vm');
+$kvm->setVmCpu('my-vm', '4');
+$kvm->setVmMemory('my-vm', '4096');
+$kvm->stopVm('my-vm');
+$kvm->closeConnection();
+```
+
+5.12 VirtualBox examples
+
+Pour utiliser VirtualBox via SSH, assurez-vous que VirtualBox et VBoxManage sont
+installés sur la machine distante, puis utilisez `VirtualboxOps` pour gérer les
+machines virtuelles.
+
+```php
+use Cyonima\Ops\Virtualbox\VirtualboxOps;
+
+$vbox = new VirtualboxOps();
+$vbox->setHost('vbox-host.example.local')->setCredentials('vboxuser','password')->setSshPort(22);
+$vbox->openConnection();
+$vbox->getVirtualboxVersion();
+$vbox->listVMs();
+$vbox->listRunningVMs();
+$vbox->createVm('test-vm', 'Ubuntu_64', '2048', '2');
+$vbox->createAndAttachDisk('test-vm', '/var/vbox/test-vm.vdi', '40000');
+$vbox->startVm('test-vm', 'headless');
+$vbox->getVmStatus('test-vm');
+$vbox->setVmCpu('test-vm', '4');
+$vbox->setVmMemory('test-vm', '4096');
+$vbox->stopVm('test-vm');
+$vbox->closeConnection();
+```
+
+5.13 Proxmox examples
+
+Pour utiliser Proxmox via SSH, installez les outils Proxmox (qm et pvesh) sur la
+machine distante, puis utilisez `ProxmoxOps` pour gérer les ressources.
+
+```php
+use Cyonima\Ops\Proxmox\ProxmoxOps;
+
+$proxmox = new ProxmoxOps();
+$proxmox->setHost('proxmox-node.example.local')->setCredentials('root','password')->setSshPort(22);
+$proxmox->openConnection();
+$proxmox->getProxmoxVersion();
+$proxmox->listNodes();
+$proxmox->listVMs();
+$proxmox->createVm('100', 'test-vm', '2048', '2', 'local:0');
+$proxmox->startVm('100');
+$proxmox->getVmStatus('100');
+$proxmox->setVmCpu('100', '4');
+$proxmox->setVmMemory('100', '4096');
+$proxmox->createSnapshot('100', 'backup-2026-06-01');
+$proxmox->listSnapshots('100');
+$proxmox->stopVm('100');
+$proxmox->closeConnection();
 ```
 
 6. Sécurité, validation et échappement
