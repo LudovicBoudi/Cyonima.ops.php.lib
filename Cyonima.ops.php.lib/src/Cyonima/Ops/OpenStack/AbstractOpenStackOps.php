@@ -17,8 +17,8 @@ abstract class AbstractOpenStackOps extends AbstractOps
 {
     private ?string $authUrl = null;
     private ?string $projectName = null;
-    private ?string $username = null;
-    private ?string $password = null;
+    private ?string $osUsername = null;
+    private ?string $osPassword = null;
     private string $userDomainName = 'Default';
     private string $projectDomainName = 'Default';
 
@@ -43,8 +43,8 @@ abstract class AbstractOpenStackOps extends AbstractOps
     ): self {
         $this->authUrl = $authUrl;
         $this->projectName = $projectName;
-        $this->username = $username;
-        $this->password = $password;
+        $this->osUsername = $username;
+        $this->osPassword = $password;
         $this->userDomainName = $userDomainName;
         $this->projectDomainName = $projectDomainName;
 
@@ -212,14 +212,14 @@ abstract class AbstractOpenStackOps extends AbstractOps
      */
     private function buildAuthOptions(): string
     {
-        if ($this->authUrl === null || $this->projectName === null || $this->username === null || $this->password === null) {
+        if ($this->authUrl === null || $this->projectName === null || $this->osUsername === null || $this->osPassword === null) {
             throw new \RuntimeException('OpenStack authentication has not been configured. Call setOpenStackAuthentication() first.');
         }
 
         return '--os-auth-url ' . self::escapeShellArgument($this->authUrl)
             . ' --os-project-name ' . self::escapeShellArgument($this->projectName)
-            . ' --os-username ' . self::escapeShellArgument($this->username)
-            . ' --os-password ' . self::escapeShellArgument($this->password)
+            . ' --os-username ' . self::escapeShellArgument($this->osUsername)
+            . ' --os-password ' . self::escapeShellArgument($this->osPassword)
             . ' --os-user-domain-name ' . self::escapeShellArgument($this->userDomainName)
             . ' --os-project-domain-name ' . self::escapeShellArgument($this->projectDomainName);
     }

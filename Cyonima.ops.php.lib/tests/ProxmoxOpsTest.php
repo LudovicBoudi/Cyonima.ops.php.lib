@@ -2,164 +2,268 @@
 
 declare(strict_types=1);
 
-namespace Cyonima\Tests;
+namespace Cyonima\Ops\Tests;
 
 use Cyonima\Ops\Proxmox\ProxmoxOps;
+use Cyonima\Ops\RemoteCommandOutput;
 use PHPUnit\Framework\TestCase;
 
 class ProxmoxOpsTest extends TestCase
 {
-    private ProxmoxOps $proxmox;
-
-    protected function setUp(): void
-    {
-        $this->proxmox = new ProxmoxOps();
-        $this->proxmox->setHost('127.0.0.1')
-            ->setCredentials('root', 'testpass')
-            ->setSshPort(22);
-    }
-
-    /**
-     * Test getProxmoxVersion() command generation.
-     */
     public function testGetProxmoxVersion(): void
     {
-        $output = $this->proxmox->getProxmoxVersion();
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('8.0', '', 0);
+            }
+        };
+
+        $result = $ops->getProxmoxVersion();
+
+        $this->assertSame("pvesh get /version", $ops->capturedCommand);
+        $this->assertSame('8.0', $result->getStdout());
     }
 
-    /**
-     * Test listNodes() command generation.
-     */
     public function testListNodes(): void
     {
-        $output = $this->proxmox->listNodes();
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('pve1', '', 0);
+            }
+        };
+
+        $result = $ops->listNodes();
+
+        $this->assertSame("pvesh get /nodes", $ops->capturedCommand);
     }
 
-    /**
-     * Test listVMs() command generation.
-     */
     public function testListVMs(): void
     {
-        $output = $this->proxmox->listVMs();
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('VM list', '', 0);
+            }
+        };
+
+        $result = $ops->listVMs();
+
+        $this->assertSame("qm list", $ops->capturedCommand);
     }
 
-    /**
-     * Test getVmStatus() with VM ID.
-     */
     public function testGetVmStatus(): void
     {
-        $output = $this->proxmox->getVmStatus('100');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('running', '', 0);
+            }
+        };
+
+        $result = $ops->getVmStatus('100');
+
+        $this->assertSame("qm status '100'", $ops->capturedCommand);
     }
 
-    /**
-     * Test getVmConfig() with VM ID.
-     */
     public function testGetVmConfig(): void
     {
-        $output = $this->proxmox->getVmConfig('100');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('config...', '', 0);
+            }
+        };
+
+        $result = $ops->getVmConfig('100');
+
+        $this->assertSame("qm config '100'", $ops->capturedCommand);
     }
 
-    /**
-     * Test startVm() with VM ID.
-     */
     public function testStartVm(): void
     {
-        $output = $this->proxmox->startVm('100');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->startVm('100');
+
+        $this->assertSame("qm start '100'", $ops->capturedCommand);
     }
 
-    /**
-     * Test stopVm() with VM ID.
-     */
     public function testStopVm(): void
     {
-        $output = $this->proxmox->stopVm('100');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->stopVm('100');
+
+        $this->assertSame("qm shutdown '100'", $ops->capturedCommand);
     }
 
-    /**
-     * Test killVm() with VM ID.
-     */
     public function testKillVm(): void
     {
-        $output = $this->proxmox->killVm('100');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->killVm('100');
+
+        $this->assertSame("qm stop '100'", $ops->capturedCommand);
     }
 
-    /**
-     * Test deleteVm() with VM ID.
-     */
     public function testDeleteVm(): void
     {
-        $output = $this->proxmox->deleteVm('100');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->deleteVm('100');
+
+        $this->assertSame("qm destroy '100'", $ops->capturedCommand);
     }
 
-    /**
-     * Test setVmCpu() with VM ID and cores.
-     */
     public function testSetVmCpu(): void
     {
-        $output = $this->proxmox->setVmCpu('100', '4');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->setVmCpu('100', '4');
+
+        $this->assertSame("qm set '100' --cores '4'", $ops->capturedCommand);
     }
 
-    /**
-     * Test setVmMemory() with VM ID and memory value.
-     */
     public function testSetVmMemory(): void
     {
-        $output = $this->proxmox->setVmMemory('100', '4096');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->setVmMemory('100', '4096');
+
+        $this->assertSame("qm set '100' --memory '4096'", $ops->capturedCommand);
     }
 
-    /**
-     * Test listStorages() command generation.
-     */
     public function testListStorages(): void
     {
-        $output = $this->proxmox->listStorages();
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('storage...', '', 0);
+            }
+        };
+
+        $result = $ops->listStorages();
+
+        $this->assertSame("pvesh get /storage", $ops->capturedCommand);
     }
 
-    /**
-     * Test getClusterStatus() command generation.
-     */
     public function testGetClusterStatus(): void
     {
-        $output = $this->proxmox->getClusterStatus();
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('quorate', '', 0);
+            }
+        };
+
+        $result = $ops->getClusterStatus();
+
+        $this->assertSame("pvesh get /cluster/status", $ops->capturedCommand);
     }
 
-    /**
-     * Test createSnapshot() with VM ID and snapshot name.
-     */
     public function testCreateSnapshot(): void
     {
-        $output = $this->proxmox->createSnapshot('100', 'backup-2026-06-01');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->createSnapshot('100', 'backup-2026-06-01');
+
+        $this->assertSame("qm snapshot '100' --snapname 'backup-2026-06-01'", $ops->capturedCommand);
     }
 
-    /**
-     * Test listSnapshots() with VM ID.
-     */
     public function testListSnapshots(): void
     {
-        $output = $this->proxmox->listSnapshots('100');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('snapshots...', '', 0);
+            }
+        };
+
+        $result = $ops->listSnapshots('100');
+
+        $this->assertSame("qm listsnapshot '100'", $ops->capturedCommand);
     }
 
-    /**
-     * Test cloneVm() with source and target VM IDs.
-     */
     public function testCloneVm(): void
     {
-        $output = $this->proxmox->cloneVm('100', '101', 'cloned-vm');
-        $this->assertIsObject($output);
+        $ops = new class() extends ProxmoxOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->cloneVm('100', '101', 'cloned-vm');
+
+        $this->assertSame("qm clone '100' '101' --name 'cloned-vm'", $ops->capturedCommand);
     }
 }

@@ -6,6 +6,7 @@ namespace Cyonima\Ops\Logger;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Stringable;
 
 /**
  * Simple PSR-3 compliant logger implementation
@@ -16,6 +17,7 @@ class SimpleLogger implements LoggerInterface
 {
     private string $logFile;
     private string $logLevel = LogLevel::INFO;
+    /** @var array<string, int> */
     private array $logLevels = [
         LogLevel::DEBUG => 0,
         LogLevel::INFO => 1,
@@ -27,12 +29,6 @@ class SimpleLogger implements LoggerInterface
         LogLevel::EMERGENCY => 7,
     ];
 
-    /**
-     * Constructor
-     *
-     * @param string|null $logFile Path to log file (if null, logs to stderr)
-     * @param string $minLogLevel Minimum log level to record (default: INFO)
-     */
     public function __construct(?string $logFile = null, string $minLogLevel = LogLevel::INFO)
     {
         $this->logFile = $logFile ?? 'php://stderr';
@@ -43,11 +39,10 @@ class SimpleLogger implements LoggerInterface
      * Log a message at the given level
      *
      * @param mixed $level
-     * @param string $message
-     * @param array $context
-     * @return void
+     * @param string|\Stringable $message
+     * @param array<string, mixed> $context
      */
-    public function log($level, string $message, array $context = []): void
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         // Check if we should log this level
         if (!isset($this->logLevels[$level])) {
@@ -58,8 +53,7 @@ class SimpleLogger implements LoggerInterface
             return; // Skip if below minimum level
         }
 
-        // Interpolate context into message
-        $message = $this->interpolate($message, $context);
+        $message = $this->interpolate((string) $message, $context);
 
         // Format the log entry
         $timestamp = date('Y-m-d H:i:s');
@@ -72,11 +66,10 @@ class SimpleLogger implements LoggerInterface
     /**
      * System is unusable
      *
-     * @param string $message
-     * @param array $context
-     * @return void
+     * @param string|\Stringable $message
+     * @param array<string, mixed> $context
      */
-    public function emergency(string $message, array $context = []): void
+    public function emergency(string|\Stringable $message, array $context = []): void
     {
         $this->log(LogLevel::EMERGENCY, $message, $context);
     }
@@ -84,11 +77,11 @@ class SimpleLogger implements LoggerInterface
     /**
      * Action must be taken immediately
      *
-     * @param string $message
-     * @param array $context
+     * @param string|\Stringable $message
+     * @param array<string, mixed> $context
      * @return void
      */
-    public function alert(string $message, array $context = []): void
+    public function alert(string|\Stringable $message, array $context = []): void
     {
         $this->log(LogLevel::ALERT, $message, $context);
     }
@@ -96,11 +89,11 @@ class SimpleLogger implements LoggerInterface
     /**
      * Critical conditions
      *
-     * @param string $message
-     * @param array $context
+     * @param string|\Stringable $message
+     * @param array<string, mixed> $context
      * @return void
      */
-    public function critical(string $message, array $context = []): void
+    public function critical(string|\Stringable $message, array $context = []): void
     {
         $this->log(LogLevel::CRITICAL, $message, $context);
     }
@@ -108,11 +101,11 @@ class SimpleLogger implements LoggerInterface
     /**
      * Runtime errors
      *
-     * @param string $message
-     * @param array $context
+     * @param string|\Stringable $message
+     * @param array<string, mixed> $context
      * @return void
      */
-    public function error(string $message, array $context = []): void
+    public function error(string|\Stringable $message, array $context = []): void
     {
         $this->log(LogLevel::ERROR, $message, $context);
     }
@@ -120,11 +113,11 @@ class SimpleLogger implements LoggerInterface
     /**
      * Exceptional occurrences that are not errors
      *
-     * @param string $message
-     * @param array $context
+     * @param string|\Stringable $message
+     * @param array<string, mixed> $context
      * @return void
      */
-    public function warning(string $message, array $context = []): void
+    public function warning(string|\Stringable $message, array $context = []): void
     {
         $this->log(LogLevel::WARNING, $message, $context);
     }
@@ -132,11 +125,11 @@ class SimpleLogger implements LoggerInterface
     /**
      * Normal but significant events
      *
-     * @param string $message
-     * @param array $context
+     * @param string|\Stringable $message
+     * @param array<string, mixed> $context
      * @return void
      */
-    public function notice(string $message, array $context = []): void
+    public function notice(string|\Stringable $message, array $context = []): void
     {
         $this->log(LogLevel::NOTICE, $message, $context);
     }
@@ -144,11 +137,11 @@ class SimpleLogger implements LoggerInterface
     /**
      * Interesting events
      *
-     * @param string $message
-     * @param array $context
+     * @param string|\Stringable $message
+     * @param array<string, mixed> $context
      * @return void
      */
-    public function info(string $message, array $context = []): void
+    public function info(string|\Stringable $message, array $context = []): void
     {
         $this->log(LogLevel::INFO, $message, $context);
     }
@@ -156,11 +149,11 @@ class SimpleLogger implements LoggerInterface
     /**
      * Detailed debug information
      *
-     * @param string $message
-     * @param array $context
+     * @param string|\Stringable $message
+     * @param array<string, mixed> $context
      * @return void
      */
-    public function debug(string $message, array $context = []): void
+    public function debug(string|\Stringable $message, array $context = []): void
     {
         $this->log(LogLevel::DEBUG, $message, $context);
     }
@@ -168,9 +161,7 @@ class SimpleLogger implements LoggerInterface
     /**
      * Interpolate context values into message placeholders
      *
-     * @param string $message
-     * @param array $context
-     * @return string
+     * @param array<string, mixed> $context
      */
     private function interpolate(string $message, array $context): string
     {

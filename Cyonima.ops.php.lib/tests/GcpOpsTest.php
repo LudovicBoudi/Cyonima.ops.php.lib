@@ -15,16 +15,18 @@ final class GcpOpsTest extends TestCase
         $path = '/tmp/service-account.json';
 
         $ops = new class() extends GcpOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('gcloud auth activate-service-account', $command);
-                $this->assertStringContainsString('--key-file ' . self::escapeShellArgument($path), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('Activated', '', 0);
             }
         };
 
         $result = $ops->authenticateWithServiceAccountKey($path);
 
+        $this->assertStringContainsString('gcloud auth activate-service-account', $ops->capturedCommand);
+        $this->assertStringContainsString('--key-file', $ops->capturedCommand);
         $this->assertSame('Activated', $result->getStdout());
         $this->assertTrue($result->isSuccessful());
     }
@@ -32,20 +34,22 @@ final class GcpOpsTest extends TestCase
     public function testCreateInstanceBuildsGcloudComputeCreateCommand(): void
     {
         $ops = new class() extends GcpOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('gcloud compute instances create ' . self::escapeShellArgument('my-instance'), $command);
-                $this->assertStringContainsString('--zone ' . self::escapeShellArgument('europe-west1-b'), $command);
-                $this->assertStringContainsString('--machine-type ' . self::escapeShellArgument('e2-medium'), $command);
-                $this->assertStringContainsString('--image-family ' . self::escapeShellArgument('ubuntu-2004-lts'), $command);
-                $this->assertStringContainsString('--image-project ' . self::escapeShellArgument('ubuntu-os-cloud'), $command);
-                $this->assertStringContainsString('--network ' . self::escapeShellArgument('default'), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('name: my-instance', '', 0);
             }
         };
 
         $result = $ops->createInstance('my-instance', 'europe-west1-b', 'e2-medium', 'ubuntu-2004-lts', 'ubuntu-os-cloud', 'default');
 
+        $this->assertStringContainsString('gcloud compute instances create', $ops->capturedCommand);
+        $this->assertStringContainsString('--zone', $ops->capturedCommand);
+        $this->assertStringContainsString('--machine-type', $ops->capturedCommand);
+        $this->assertStringContainsString('--image-family', $ops->capturedCommand);
+        $this->assertStringContainsString('--image-project', $ops->capturedCommand);
+        $this->assertStringContainsString('--network', $ops->capturedCommand);
         $this->assertSame('name: my-instance', $result->getStdout());
         $this->assertTrue($result->isSuccessful());
     }

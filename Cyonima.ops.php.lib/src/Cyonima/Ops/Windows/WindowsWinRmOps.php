@@ -41,17 +41,12 @@ class WindowsWinRmOps
     public function manageService(string $serviceName, string $action): RemoteCommandOutput
     {
         $action = strtolower($action);
+        $s = $this->escapePowerShellArgument($serviceName);
+        $a = $this->escapePowerShellArgument($action);
+
         $script = sprintf(
-            'switch (%s) {''start'' { Start-Service -Name %s; Get-Service -Name %s | Select-Object Name, Status } ''stop'' { Stop-Service -Name %s; Get-Service -Name %s | Select-Object Name, Status } ''restart'' { Restart-Service -Name %s; Get-Service -Name %s | Select-Object Name, Status } ''status'' { Get-Service -Name %s | Select-Object Name, Status } default { Write-Error ''Unsupported action: %s''; exit 1 } }',
-            $this->escapePowerShellArgument($action),
-            $this->escapePowerShellArgument($serviceName),
-            $this->escapePowerShellArgument($serviceName),
-            $this->escapePowerShellArgument($serviceName),
-            $this->escapePowerShellArgument($serviceName),
-            $this->escapePowerShellArgument($serviceName),
-            $this->escapePowerShellArgument($serviceName),
-            $this->escapePowerShellArgument($serviceName),
-            $this->escapePowerShellArgument($action)
+            "switch (%s) {'start' { Start-Service -Name %s; Get-Service -Name %s | Select-Object Name, Status } 'stop' { Stop-Service -Name %s; Get-Service -Name %s | Select-Object Name, Status } 'restart' { Restart-Service -Name %s; Get-Service -Name %s | Select-Object Name, Status } 'status' { Get-Service -Name %s | Select-Object Name, Status } default { Write-Error 'Unsupported action: %s'; exit 1 } }",
+            $a, $s, $s, $s, $s, $s, $s, $s, $a
         );
 
         return $this->client->executePowerShell($script);

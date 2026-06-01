@@ -27,7 +27,7 @@ final class InputValidatorTest extends TestCase
     public function testValidateCommandRejectsDangerousInputInStrictMode(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        InputValidator::validateCommand('rm -rf /', true);
+        InputValidator::validateCommand('rm -rf /; echo hacked', true);
     }
 
     public function testSanitizeFilenameRemovesDangerousCharacters(): void

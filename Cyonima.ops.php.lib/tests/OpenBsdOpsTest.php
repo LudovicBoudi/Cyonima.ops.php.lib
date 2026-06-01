@@ -13,34 +13,42 @@ final class OpenBsdOpsTest extends TestCase
     public function testInstallPackageUsesPkgAdd(): void
     {
         $ops = new class() extends OpenBsdOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertSame("pkg_add 'nano'", $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('', '', 0);
             }
         };
 
         $ops->installPackage('nano');
+
+        $this->assertSame("pkg_add 'nano'", $ops->capturedCommand);
     }
 
     public function testManageServiceStatusUsesServiceCommand(): void
     {
         $ops = new class() extends OpenBsdOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertSame("service 'httpd' status", $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('', '', 0);
             }
         };
 
         $ops->getService('httpd');
+
+        $this->assertSame("service 'httpd' status", $ops->capturedCommand);
     }
 
     public function testGetDistributionReturnsOpenBSD(): void
     {
         $ops = new class() extends OpenBsdOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('', '', 0);
             }
         };

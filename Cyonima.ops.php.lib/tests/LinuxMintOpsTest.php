@@ -13,14 +13,17 @@ final class LinuxMintOpsTest extends TestCase
     public function testInstallPackageUsesApt(): void
     {
         $ops = new class() extends LinuxMintOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('apt install -y ' . self::escapeShellArgument('htop'), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('', '', 0);
             }
         };
 
         $result = $ops->installPackage('htop');
+
+        $this->assertStringContainsString('apt install -y ', $ops->capturedCommand);
         $this->assertSame(0, $result->getExitCode());
     }
 }

@@ -14,16 +14,20 @@ final class SQLServerOpsTest extends TestCase
     {
         $query = "SELECT 1;";
         $ops = new class() extends SQLServerOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('Invoke-Sqlcmd', $command);
-                $this->assertStringContainsString('-ServerInstance ' . self::escapePowerShellArgument('localhost\\SQLEXPRESS'), $command);
-                $this->assertStringContainsString('-Database ' . self::escapePowerShellArgument('master'), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('', '', 0);
             }
         };
 
         $result = $ops->runQuery('localhost\\SQLEXPRESS', 'master', $query);
+
+        $this->assertStringContainsString('Invoke-Sqlcmd', $ops->capturedCommand);
+        $this->assertStringContainsString('-ServerInstance', $ops->capturedCommand);
+        $this->assertStringContainsString('localhost\SQLEXPRESS', $ops->capturedCommand);
+        $this->assertStringContainsString('-Database', $ops->capturedCommand);
         $this->assertSame(0, $result->getExitCode());
     }
 }

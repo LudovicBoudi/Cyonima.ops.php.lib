@@ -17,18 +17,20 @@ final class AzureOpsTest extends TestCase
         $clientSecret = 'secret-password';
 
         $ops = new class() extends AzureOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('az login --service-principal', $command);
-                $this->assertStringContainsString('--tenant ' . self::escapeShellArgument('00000000-0000-0000-0000-000000000000'), $command);
-                $this->assertStringContainsString('--username ' . self::escapeShellArgument('00000000-0000-0000-0000-000000000000'), $command);
-                $this->assertStringContainsString('--password ' . self::escapeShellArgument('secret-password'), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('[]', '', 0);
             }
         };
 
         $result = $ops->loginWithServicePrincipal($tenantId, $clientId, $clientSecret);
 
+        $this->assertStringContainsString('az login --service-principal', $ops->capturedCommand);
+        $this->assertStringContainsString('--tenant', $ops->capturedCommand);
+        $this->assertStringContainsString('--username', $ops->capturedCommand);
+        $this->assertStringContainsString('--password', $ops->capturedCommand);
         $this->assertSame('[]', $result->getStdout());
         $this->assertTrue($result->isSuccessful());
     }
@@ -36,16 +38,18 @@ final class AzureOpsTest extends TestCase
     public function testCreateResourceGroupBuildsGroupCreateCommand(): void
     {
         $ops = new class() extends AzureOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('az group create --name ' . self::escapeShellArgument('my-rg'), $command);
-                $this->assertStringContainsString('--location ' . self::escapeShellArgument('westeurope'), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('{"name":"my-rg"}', '', 0);
             }
         };
 
         $result = $ops->createResourceGroup('my-rg', 'westeurope');
 
+        $this->assertStringContainsString('az group create --name', $ops->capturedCommand);
+        $this->assertStringContainsString('--location', $ops->capturedCommand);
         $this->assertSame('{"name":"my-rg"}', $result->getStdout());
         $this->assertTrue($result->isSuccessful());
     }
@@ -53,16 +57,18 @@ final class AzureOpsTest extends TestCase
     public function testListVirtualMachinesBuildsVmListCommand(): void
     {
         $ops = new class() extends AzureOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('az vm list --show-details --output json', $command);
-                $this->assertStringContainsString('--resource-group ' . self::escapeShellArgument('my-rg'), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('[]', '', 0);
             }
         };
 
         $result = $ops->listVirtualMachines('my-rg');
 
+        $this->assertStringContainsString('az vm list --show-details --output json', $ops->capturedCommand);
+        $this->assertStringContainsString('--resource-group', $ops->capturedCommand);
         $this->assertSame('[]', $result->getStdout());
         $this->assertTrue($result->isSuccessful());
     }

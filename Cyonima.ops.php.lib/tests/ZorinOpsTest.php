@@ -13,14 +13,17 @@ final class ZorinOpsTest extends TestCase
     public function testUpgradePackagesInvokesAptUpdateUpgrade(): void
     {
         $ops = new class() extends ZorinOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('apt update && apt upgrade -y', $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('', '', 0);
             }
         };
 
         $result = $ops->upgradePackages();
+
+        $this->assertStringContainsString('apt update && apt upgrade -y', $ops->capturedCommand);
         $this->assertSame(0, $result->getExitCode());
     }
 }

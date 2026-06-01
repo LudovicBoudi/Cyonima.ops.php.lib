@@ -2,128 +2,203 @@
 
 declare(strict_types=1);
 
-namespace Cyonima\Tests;
+namespace Cyonima\Ops\Tests;
 
 use Cyonima\Ops\Kvm\KvmOps;
+use Cyonima\Ops\RemoteCommandOutput;
 use PHPUnit\Framework\TestCase;
 
 class KvmOpsTest extends TestCase
 {
-    private KvmOps $kvm;
-
-    protected function setUp(): void
-    {
-        $this->kvm = new KvmOps();
-        $this->kvm->setHost('127.0.0.1')
-            ->setCredentials('testuser', 'testpass')
-            ->setSshPort(22);
-    }
-
-    /**
-     * Test getVirshVersion() command generation.
-     */
     public function testGetVirshVersion(): void
     {
-        $output = $this->kvm->getVirshVersion();
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('8.0.0', '', 0);
+            }
+        };
+
+        $result = $ops->getVirshVersion();
+
+        $this->assertStringContainsString('virsh version', $ops->capturedCommand);
     }
 
-    /**
-     * Test listVMs() command generation.
-     */
     public function testListVMs(): void
     {
-        $output = $this->kvm->listVMs();
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('vm1', '', 0);
+            }
+        };
+
+        $result = $ops->listVMs();
+
+        $this->assertStringContainsString('virsh list --all', $ops->capturedCommand);
     }
 
-    /**
-     * Test getVmStatus() with VM name.
-     */
     public function testGetVmStatus(): void
     {
-        $output = $this->kvm->getVmStatus('test-vm');
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('running', '', 0);
+            }
+        };
+
+        $result = $ops->getVmStatus('test-vm');
+
+        $this->assertStringContainsString('virsh domstate', $ops->capturedCommand);
     }
 
-    /**
-     * Test getVmInfo() with VM name.
-     */
     public function testGetVmInfo(): void
     {
-        $output = $this->kvm->getVmInfo('test-vm');
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('info...', '', 0);
+            }
+        };
+
+        $result = $ops->getVmInfo('test-vm');
+
+        $this->assertStringContainsString('virsh dominfo', $ops->capturedCommand);
     }
 
-    /**
-     * Test startVm() with VM name.
-     */
     public function testStartVm(): void
     {
-        $output = $this->kvm->startVm('test-vm');
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->startVm('test-vm');
+
+        $this->assertStringContainsString('virsh start', $ops->capturedCommand);
     }
 
-    /**
-     * Test stopVm() with VM name.
-     */
     public function testStopVm(): void
     {
-        $output = $this->kvm->stopVm('test-vm');
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->stopVm('test-vm');
+
+        $this->assertStringContainsString('virsh shutdown', $ops->capturedCommand);
     }
 
-    /**
-     * Test destroyVm() with VM name.
-     */
     public function testDestroyVm(): void
     {
-        $output = $this->kvm->destroyVm('test-vm');
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->destroyVm('test-vm');
+
+        $this->assertStringContainsString('virsh destroy', $ops->capturedCommand);
     }
 
-    /**
-     * Test deleteVm() with VM name.
-     */
     public function testDeleteVm(): void
     {
-        $output = $this->kvm->deleteVm('test-vm');
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->deleteVm('test-vm');
+
+        $this->assertStringContainsString('virsh undefine', $ops->capturedCommand);
     }
 
-    /**
-     * Test setVmCpu() with VM name and CPU count.
-     */
     public function testSetVmCpu(): void
     {
-        $output = $this->kvm->setVmCpu('test-vm', '4');
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->setVmCpu('test-vm', '4');
+
+        $this->assertStringContainsString('virsh setvcpus', $ops->capturedCommand);
     }
 
-    /**
-     * Test setVmMemory() with VM name and memory value.
-     */
     public function testSetVmMemory(): void
     {
-        $output = $this->kvm->setVmMemory('test-vm', '4096');
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('', '', 0);
+            }
+        };
+
+        $result = $ops->setVmMemory('test-vm', '4096');
+
+        $this->assertStringContainsString('virsh setmem', $ops->capturedCommand);
     }
 
-    /**
-     * Test listNetworks() command generation.
-     */
     public function testListNetworks(): void
     {
-        $output = $this->kvm->listNetworks();
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('default', '', 0);
+            }
+        };
+
+        $result = $ops->listNetworks();
+
+        $this->assertStringContainsString('virsh net-list --all', $ops->capturedCommand);
     }
 
-    /**
-     * Test listStoragePools() command generation.
-     */
     public function testListStoragePools(): void
     {
-        $output = $this->kvm->listStoragePools();
-        $this->assertIsObject($output);
+        $ops = new class() extends KvmOps {
+            public string $capturedCommand = '';
+            public function remoteExec(string $command): RemoteCommandOutput
+            {
+                $this->capturedCommand = $command;
+                return new RemoteCommandOutput('default', '', 0);
+            }
+        };
+
+        $result = $ops->listStoragePools();
+
+        $this->assertStringContainsString('virsh pool-list --all', $ops->capturedCommand);
     }
 }

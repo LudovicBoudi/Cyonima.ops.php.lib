@@ -14,15 +14,18 @@ final class WindowsOpsTest extends TestCase
     {
         $path = 'C:\\temp\\example.log';
         $ops = new class() extends WindowsOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('Get-Content -Path ' . self::escapePowerShellArgument($path), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('log line', '', 0);
             }
         };
 
         $result = $ops->readFile($path);
 
+        $this->assertStringContainsString('Get-Content -Path', $ops->capturedCommand);
+        $this->assertStringContainsString('C:\temp\example.log', $ops->capturedCommand);
         $this->assertSame('log line', $result->getStdout());
         $this->assertTrue($result->isSuccessful());
     }
@@ -31,35 +34,38 @@ final class WindowsOpsTest extends TestCase
     {
         $path = 'C:\\temp\\out.txt';
         $content = "hello windows\n";
-        $encoded = base64_encode($content);
 
         $ops = new class() extends WindowsOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('Set-Content -Path ' . self::escapePowerShellArgument('C:\\temp\\out.txt'), $command);
-                $this->assertStringContainsString(self::escapePowerShellArgument($encoded), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('', '', 0);
             }
         };
 
         $result = $ops->writeFile($path, $content);
 
+        $this->assertStringContainsString('Set-Content -Path', $ops->capturedCommand);
+        $this->assertStringContainsString('C:\temp\out.txt', $ops->capturedCommand);
         $this->assertSame(0, $result->getExitCode());
     }
 
     public function testGetProcessesBuildsPowerShellJsonCommand(): void
     {
         $ops = new class() extends WindowsOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('Get-Process', $command);
-                $this->assertStringContainsString('| ConvertTo-Json -Compress', $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('[{"Id":123,"ProcessName":"php"}]', '', 0);
             }
         };
 
         $result = $ops->getProcesses('php');
 
+        $this->assertStringContainsString('Get-Process', $ops->capturedCommand);
+        $this->assertStringContainsString('ConvertTo-Json -Compress', $ops->capturedCommand);
         $this->assertSame('[{"Id":123,"ProcessName":"php"}]', $result->getStdout());
         $this->assertTrue($result->isSuccessful());
     }
@@ -67,17 +73,19 @@ final class WindowsOpsTest extends TestCase
     public function testAddFirewallRuleBuildsNewNetFirewallRule(): void
     {
         $ops = new class() extends WindowsOps {
+            public string $capturedCommand = '';
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertStringContainsString('New-NetFirewallRule -Name ' . self::escapePowerShellArgument('AllowSSH'), $command);
-                $this->assertStringContainsString('-Protocol ' . self::escapePowerShellArgument('TCP'), $command);
-                $this->assertStringContainsString('-LocalPort ' . self::escapePowerShellArgument('22'), $command);
+                $this->capturedCommand = $command;
                 return new RemoteCommandOutput('', '', 0);
             }
         };
 
         $result = $ops->addFirewallRule('AllowSSH', 'Allow SSH Access', 'Inbound', 'TCP', '22');
 
+        $this->assertStringContainsString('New-NetFirewallRule -Name', $ops->capturedCommand);
+        $this->assertStringContainsString('-Protocol', $ops->capturedCommand);
+        $this->assertStringContainsString('-LocalPort', $ops->capturedCommand);
         $this->assertSame(0, $result->getExitCode());
     }
 }

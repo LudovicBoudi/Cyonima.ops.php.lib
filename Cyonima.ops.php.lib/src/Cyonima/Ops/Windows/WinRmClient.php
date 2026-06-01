@@ -118,7 +118,7 @@ XML;
   <s:Body>
     <rsp:CommandLine>
       <rsp:Command>powershell.exe</rsp:Command>
-      <rsp:Arguments>-NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand {$this->encodePowerShellCommand($command)}</rsp:Arguments>
+      <rsp:Arguments>-NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand {$this->encodeToEncodedCommand($command)}</rsp:Arguments>
     </rsp:CommandLine>
   </s:Body>
 </s:Envelope>

@@ -17,6 +17,7 @@ final class MacOsOpsTest extends TestCase
 
         $ops = new class($expectedOutput) extends MacOsOps {
             private RemoteCommandOutput $expectedOutput;
+            public string $capturedCommand = '';
 
             public function __construct(RemoteCommandOutput $expectedOutput)
             {
@@ -26,13 +27,14 @@ final class MacOsOpsTest extends TestCase
 
             public function remoteExec(string $command): RemoteCommandOutput
             {
-                $this->assertSame('sw_vers -productVersion', $command);
+                $this->capturedCommand = $command;
                 return $this->expectedOutput;
             }
         };
 
         $result = $ops->getMacOsVersion();
 
+        $this->assertSame('sw_vers -productVersion', $ops->capturedCommand);
         $this->assertSame($expectedOutput, $result);
     }
 
