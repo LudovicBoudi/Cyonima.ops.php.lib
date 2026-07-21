@@ -165,12 +165,26 @@ $result->throwIfFailed();  // throws ExecutionException
 
 ### Proxy / Jump host
 
+The SSH session connects to the jump host; commands are then relayed to the
+final target by invoking `ssh` on the jump host.
+
 ```php
-$ops->setProxy('10.0.0.1')       // Jump host
+$ops->setProxy('10.0.0.1')        // Jump host
+    ->setProxyTargetPort(22)      // Target SSH port (optional, default 22)
     ->setHost('192.168.1.100')    // Final target
     ->setCredentials('user', 'password')
     ->openConnection();
+
+$ops->remoteExec('uname -a');     // Runs on 192.168.1.100 through the jump host
 ```
+
+Notes on jump host mode:
+- With password auth, the jump host must have `sshpass` installed (the password
+  is passed via a `chmod 400` temp file, never on the command line).
+- With RSA key / agent auth, the jump host is expected to have its own key-based
+  access to the target (`BatchMode` is enabled to avoid interactive prompts).
+- SCP/SFTP file transfers are **not** supported in jump host mode. Connect
+  directly to the target to transfer files.
 
 ### SSH config integration
 

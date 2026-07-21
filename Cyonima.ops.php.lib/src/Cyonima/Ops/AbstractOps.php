@@ -12,8 +12,13 @@ use Psr\Log\LoggerInterface;
  * Abstract base class for OPS operations on infrastructure components
  *
  * This class provides core SSH connectivity and command execution functionality.
- * Note: This library does not check for injection attacks. It is the developer's
- * responsibility to validate all input variables before using them.
+ *
+ * Security note: the higher-level operation methods (in the Linux/BSD/Windows/etc.
+ * subclasses and traits) escape their arguments via escapeShellArgument() or
+ * escapePowerShellArgument() before building the remote command. However,
+ * remoteExec() executes the command string verbatim: when calling it directly,
+ * it is the caller's responsibility to validate and escape any untrusted input
+ * (see InputValidator).
  */
 abstract class AbstractOps
 {
@@ -22,6 +27,7 @@ abstract class AbstractOps
 
     private bool $useProxy = false;
     private ?string $proxyHost = null;
+    private int $proxyTargetPort = self::DEFAULT_SSH_PORT;
     private bool $useRsa = false;
     private ?string $rsaPrivateKey = null;
     private ?string $rsaPublicKey = null;
@@ -35,7 +41,6 @@ abstract class AbstractOps
     private ?string $targetHost = null;
     protected ?string $username = null;
     private ?string $password = null;
-    private $sshTunnel = null;
     private $sftp = null;
     private LoggerInterface $logger;
 
@@ -52,7 +57,14 @@ abstract class AbstractOps
     /**
      * Enable proxy (jump host) mode
      *
-     * @param string $proxyHost IP address or hostname of the proxy
+     * The SSH session is established with the jump host, and commands are relayed
+     * to the final target (set via setHost()) by invoking `ssh` on the jump host.
+     * See buildProxyCommand() for the authentication requirements. The target SSH
+     * port defaults to 22 and can be changed with setProxyTargetPort().
+     *
+     * Note: SCP/SFTP file transfers are not supported in proxy mode.
+     *
+     * @param string $proxyHost IP address or hostname of the jump host
      * @return self Fluent interface
      */
     public function setProxy(string $proxyHost): self
@@ -74,6 +86,22 @@ abstract class AbstractOps
         $this->useProxy = false;
         $this->proxyHost = null;
         $this->logger->info("Proxy disabled");
+        return $this;
+    }
+
+    /**
+     * Set the SSH port used to reach the final target from the jump host
+     *
+     * Only relevant in proxy mode. Defaults to 22.
+     *
+     * @param int $port SSH port of the target
+     * @return self Fluent interface
+     */
+    public function setProxyTargetPort(int $port): self
+    {
+        InputValidator::validateSshPort($port);
+        $this->proxyTargetPort = $port;
+        $this->logger->debug("Proxy target port set to: {port}", ['port' => $port]);
         return $this;
     }
 
@@ -269,24 +297,41 @@ abstract class AbstractOps
     /**
      * Verify the server's host key against the known hosts file
      *
+     * Compares the SHA-1 fingerprint of the connected server's host key against
+     * the keys recorded for this host in the known_hosts file. If a matching host
+     * entry exists but no key matches, the connection is rejected (possible
+     * man-in-the-middle attack). If no entry exists for the host at all, the
+     * connection is also rejected (strict checking).
+     *
      * @param string $host The hostname or IP to verify
      * @return void
      * @throws ConnectionException if verification fails
      */
     private function verifyHostKey(string $host): void
     {
+        if ($this->serverFingerprint === null) {
+            throw new ConnectionException("Cannot verify host key: server fingerprint unavailable");
+        }
+
         $knownHosts = $this->knownHostsFile ?? ($_SERVER['HOME'] ?? '~') . '/.ssh/known_hosts';
         $knownHosts = str_replace('~', $_SERVER['HOME'] ?? '/root', $knownHosts);
 
         if (!file_exists($knownHosts) || !is_readable($knownHosts)) {
-            $this->logger->warning("Known hosts file not found or unreadable: {path}", ['path' => $knownHosts]);
-            return;
+            throw new ConnectionException(
+                "Strict host key checking is enabled but the known hosts file is missing or unreadable: $knownHosts"
+            );
         }
 
         $lines = file($knownHosts, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if ($lines === false) {
-            return;
+            throw new ConnectionException("Unable to read known hosts file: $knownHosts");
         }
+
+        // ssh2_fingerprint(SSH2_FINGERPRINT_SHA1 | SSH2_FINGERPRINT_HEX) returns the
+        // SHA-1 digest (hex) of the raw host key blob - the same blob that is stored,
+        // base64-encoded, as the third field of a known_hosts entry.
+        $serverFingerprint = strtoupper($this->serverFingerprint);
+        $hostFound = false;
 
         foreach ($lines as $line) {
             $line = trim($line);
@@ -294,41 +339,50 @@ abstract class AbstractOps
                 continue;
             }
 
-            // Format: [host]:port or host + key type + fingerprint
+            // Format: <host-pattern> <key-type> <base64-key> [comment]
             $parts = preg_split('/\s+/', $line);
-            if (count($parts) < 3) {
+            if ($parts === false || count($parts) < 3) {
                 continue;
             }
 
-            $hostPattern = $parts[0];
-            $keyType = $parts[1];
-            $keyFingerprint = $parts[2] ?? '';
+            [$hostPattern, $keyType, $keyBlob] = $parts;
 
-            // Check if this line matches our host
             if (!$this->hostMatchesPattern($host, $hostPattern)) {
                 continue;
             }
 
-            // Get expected fingerprint type (MD5, SHA1, SHA256)
-            $expectedFingerprint = match ($keyType) {
-                'ssh-ed25519', 'ssh-rsa', 'ecdsa-sha2-nistp256',
-                'ssh-dss', 'ecdsa-sha2-nistp384', 'ecdsa-sha2-nistp521' => $keyFingerprint,
-                default => null,
-            };
-
-            if ($expectedFingerprint === null) {
+            $rawKey = base64_decode($keyBlob, true);
+            if ($rawKey === false || $rawKey === '') {
                 continue;
             }
 
-            $this->logger->debug("Found known host entry for {host}, type: {type}", [
-                'host' => $host,
-                'type' => $keyType,
-            ]);
+            $hostFound = true;
+            $expectedFingerprint = strtoupper(sha1($rawKey));
 
-            return;
+            if (hash_equals($expectedFingerprint, $serverFingerprint)) {
+                $this->logger->debug("Host key verified for {host} (type: {type})", [
+                    'host' => $host,
+                    'type' => $keyType,
+                ]);
+                return;
+            }
         }
 
-        $this->logger->warning("Host {host} not found in known hosts file", ['host' => $host]);
+        if ($hostFound) {
+            $this->logger->error("Host key verification FAILED for {host}: fingerprint mismatch", [
+                'host' => $host,
+            ]);
+            throw new ConnectionException(
+                "Host key verification failed for $host: the server's key does not match any recorded key " .
+                "in $knownHosts. This may indicate a man-in-the-middle attack."
+            );
+        }
+
+        $this->logger->error("Host {host} has no entry in known hosts file", ['host' => $host]);
+        throw new ConnectionException(
+            "Host key verification failed: no entry for $host in $knownHosts. " .
+            "Add the host key to the known hosts file or disable strict host key checking."
+        );
     }
 
     /**
@@ -622,9 +676,10 @@ abstract class AbstractOps
             'port' => $this->sshPort,
         ]);
 
-        $methods = ['timeout' => $this->sshTimeout . ''];
-
-        $this->sshConnection = @ssh2_connect($connectionHost, $this->sshPort, $methods);
+        // Note: ext-ssh2 has no native connect timeout option (the third argument of
+        // ssh2_connect is reserved for key-exchange method negotiation). The configured
+        // timeout is applied to command execution streams instead (see remoteExec()).
+        $this->sshConnection = @ssh2_connect($connectionHost, $this->sshPort);
         if ($this->sshConnection === false) {
             $this->logger->error("Failed to connect to {host}:{port}", [
                 'host' => $connectionHost,
@@ -639,17 +694,18 @@ abstract class AbstractOps
             'fingerprint' => $this->serverFingerprint,
         ]);
 
-        if ($this->strictHostKeyChecking) {
-            $this->verifyHostKey($connectionHost);
-        }
-
         try {
+            // Verify the host key before sending any credentials
+            if ($this->strictHostKeyChecking) {
+                $this->verifyHostKey($connectionHost);
+            }
+
             // Authenticate
             if ($this->useAgent) {
                 $this->logger->debug("Authenticating with SSH agent for user: {user}", [
                     'user' => $this->username,
                 ]);
-                $authenticated = ssh2_auth_agent(
+                $authenticated = @ssh2_auth_agent(
                     $this->sshConnection,
                     $this->username
                 );
@@ -657,7 +713,7 @@ abstract class AbstractOps
                 $this->logger->debug("Authenticating with RSA key for user: {user}", [
                     'user' => $this->username,
                 ]);
-                $authenticated = ssh2_auth_pubkey_file(
+                $authenticated = @ssh2_auth_pubkey_file(
                     $this->sshConnection,
                     $this->username,
                     $this->rsaPublicKey,
@@ -670,7 +726,7 @@ abstract class AbstractOps
                 if ($this->password === null) {
                     throw new AuthenticationException("Password not set for password authentication");
                 }
-                $authenticated = ssh2_auth_password(
+                $authenticated = @ssh2_auth_password(
                     $this->sshConnection,
                     $this->username,
                     $this->password
@@ -690,18 +746,16 @@ abstract class AbstractOps
                 'host' => $connectionHost,
             ]);
 
-            // Create tunnel if using proxy
+            // In proxy (jump host) mode the SSH session is established with the jump
+            // host above. Commands are then executed on the final target by invoking
+            // `ssh` on the jump host (see buildProxyCommand()). No tunnel resource is
+            // created, because ext-ssh2 cannot layer a new SSH session over one.
             if ($this->useProxy) {
-                $this->logger->debug("Creating tunnel to final target {target}:{port}", [
+                $this->logger->debug("Proxy mode: commands will be relayed to {target}:{port} via jump host {jump}", [
                     'target' => $this->targetHost,
-                    'port' => $this->sshPort,
+                    'port' => $this->proxyTargetPort,
+                    'jump' => $this->proxyHost,
                 ]);
-                $this->sshTunnel = ssh2_tunnel($this->sshConnection, $this->targetHost, $this->sshPort);
-                if ($this->sshTunnel === false) {
-                    $this->logger->error("Failed to create tunnel through proxy");
-                    throw new ConnectionException("Failed to create tunnel through proxy");
-                }
-                $this->logger->debug("Tunnel successfully created");
             }
         } catch (AuthenticationException | ConnectionException $e) {
             ssh2_disconnect($this->sshConnection);
@@ -722,11 +776,13 @@ abstract class AbstractOps
             ssh2_disconnect($this->sshConnection);
             $this->sshConnection = null;
         }
-        $this->sshTunnel = null;
     }
 
     /**
-     * Get the appropriate connection resource (tunnel or direct)
+     * Get the active SSH connection resource
+     *
+     * In proxy (jump host) mode this is the session to the jump host; commands
+     * are relayed to the final target via buildProxyCommand().
      *
      * @return mixed SSH connection resource
      * @throws ExecutionException if not connected
@@ -736,7 +792,69 @@ abstract class AbstractOps
         if ($this->sshConnection === null) {
             throw new ExecutionException("Not connected. Call openConnection() first.");
         }
-        return $this->useProxy ? $this->sshTunnel : $this->sshConnection;
+        return $this->sshConnection;
+    }
+
+    /**
+     * Wrap a command so it runs on the final target through the jump host
+     *
+     * The SSH session is connected to the jump host; this builds an `ssh`
+     * invocation, executed on the jump host, that connects to the target and
+     * runs the requested command.
+     *
+     * Authentication from the jump host to the target:
+     * - When password authentication is used, the password is passed to `sshpass`
+     *   through a temporary file (chmod 400, removed afterwards), so it never
+     *   appears in the jump host process list. This requires `sshpass` to be
+     *   installed on the jump host.
+     * - When RSA key or SSH agent authentication is used, the jump host is expected
+     *   to have its own key-based access to the target (BatchMode is enabled to
+     *   avoid interactive prompts). The client's local private key is not pushed to
+     *   the jump host.
+     *
+     * The target user defaults to the configured username; the target port
+     * defaults to 22 and can be changed with setProxyTargetPort().
+     *
+     * @param string $command The command to run on the target
+     * @return string The command to execute on the jump host
+     */
+    private function buildProxyCommand(string $command): string
+    {
+        $target = ($this->username ?? '') . '@' . ($this->targetHost ?? '');
+        $usePassword = !$this->useRsa && !$this->useAgent && $this->password !== null;
+
+        $sshOptions = '-o StrictHostKeyChecking=accept-new'
+            . ' -o ConnectTimeout=' . $this->sshTimeout
+            . ' -p ' . $this->proxyTargetPort;
+
+        // For key/agent access, fail fast instead of hanging on a prompt.
+        // BatchMode must NOT be set for the password path, as it disables the
+        // interactive prompt that sshpass answers.
+        if (!$usePassword) {
+            $sshOptions .= ' -o BatchMode=yes';
+        }
+
+        $sshInvocation = 'ssh ' . $sshOptions
+            . ' ' . self::escapeShellArgument($target)
+            . ' ' . self::escapeShellArgument($command);
+
+        // Password auth to the target: feed the password to sshpass from a
+        // restricted temporary file on the jump host, never via the command line.
+        if ($usePassword) {
+            $encoded = base64_encode((string) $this->password);
+            $tmpFile = '/tmp/._pxy_' . bin2hex(random_bytes(8));
+            $tmp = self::escapeShellArgument($tmpFile);
+
+            // Preserve the target command's exit code (the trailing rm must not mask it).
+            return 'echo ' . self::escapeShellArgument($encoded)
+                . ' | base64 --decode > ' . $tmp
+                . ' && chmod 400 ' . $tmp
+                . '; sshpass -f ' . $tmp . ' ' . $sshInvocation
+                . '; __rc=$?; rm -f ' . $tmp . '; exit $__rc';
+        }
+
+        // Key/agent based access from the jump host to the target.
+        return $sshInvocation;
     }
 
     /**
@@ -750,9 +868,12 @@ abstract class AbstractOps
     {
         $connection = $this->getConnection();
 
+        // In proxy mode, relay the command to the final target through the jump host.
+        $effectiveCommand = $this->useProxy ? $this->buildProxyCommand($command) : $command;
+
         $this->logger->debug("Executing command: {command}", ['command' => $command]);
 
-        $stream = ssh2_exec($connection, $command);
+        $stream = @ssh2_exec($connection, $effectiveCommand);
         if ($stream === false) {
             $this->logger->error("Failed to execute command: {command}", ['command' => $command]);
             throw new ExecutionException("Failed to execute command: $command");
@@ -761,8 +882,10 @@ abstract class AbstractOps
         $stderrStream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
 
         stream_set_blocking($stream, true);
+        stream_set_timeout($stream, $this->sshTimeout);
         if ($stderrStream !== false) {
             stream_set_blocking($stderrStream, true);
+            stream_set_timeout($stderrStream, $this->sshTimeout);
         }
 
         $stdout = stream_get_contents($stream);
@@ -789,6 +912,25 @@ abstract class AbstractOps
     }
 
     /**
+     * Guard against file transfers in proxy (jump host) mode
+     *
+     * The jump host rebound only relays command execution; SCP/SFTP would operate
+     * against the jump host, not the target, so they are rejected explicitly.
+     *
+     * @return void
+     * @throws ExecutionException if proxy mode is enabled
+     */
+    private function assertNoProxyForFileTransfer(): void
+    {
+        if ($this->useProxy) {
+            throw new ExecutionException(
+                "File transfer (SCP/SFTP) is not supported in proxy (jump host) mode. " .
+                "Connect directly to the target host to transfer files."
+            );
+        }
+    }
+
+    /**
      * Send a file via SCP
      *
      * @param string $localPath Local file path
@@ -799,6 +941,7 @@ abstract class AbstractOps
      */
     public function scpPut(string $localPath, string $remotePath, string $permissions = "0644"): void
     {
+        $this->assertNoProxyForFileTransfer();
         $connection = $this->getConnection();
 
         InputValidator::validateFileReadable($localPath);
@@ -838,6 +981,7 @@ abstract class AbstractOps
      */
     public function scpGet(string $remotePath, string $localPath): void
     {
+        $this->assertNoProxyForFileTransfer();
         $connection = $this->getConnection();
 
         $this->logger->info("Receiving file via SCP: {remote} -> {local}", [
@@ -868,6 +1012,8 @@ abstract class AbstractOps
      */
     protected function initializeSftp()
     {
+        $this->assertNoProxyForFileTransfer();
+
         if ($this->sftp !== null) {
             return $this->sftp;
         }

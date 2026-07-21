@@ -172,23 +172,19 @@ class InputValidator
     }
 
     /**
-     * Validate SSH port number (usually 22 or high ports)
+     * Validate SSH port number
+     *
+     * SSH is commonly run on port 22, but any valid TCP port is allowed
+     * (including 443 or other ports used to traverse restrictive firewalls).
+     * Only the valid port range (1-65535) is enforced.
      *
      * @param int $port Port number
      * @return void
-     * @throws \InvalidArgumentException if port is not suitable for SSH
+     * @throws \InvalidArgumentException if port is outside the valid range
      */
     public static function validateSshPort(int $port): void
     {
         self::validatePort($port);
-
-        // Warn against well-known problematic ports
-        $reserved = [20, 21, 23, 25, 53, 80, 110, 143, 443, 465, 587, 993, 995];
-        if (in_array($port, $reserved, true) && $port !== 22) {
-            throw new \InvalidArgumentException(
-                "SSH port $port may conflict with other services. Use 22 or high ports (1024+)"
-            );
-        }
     }
 
     /**

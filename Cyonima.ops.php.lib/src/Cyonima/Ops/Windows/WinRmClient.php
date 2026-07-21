@@ -20,6 +20,7 @@ class WinRmClient
     private string $host;
     private int $port;
     private bool $useHttps;
+    private bool $verifySsl;
     private string $username;
     private string $password;
     private LoggerInterface $logger;
@@ -31,6 +32,7 @@ class WinRmClient
         string $password,
         int $port = 5985,
         bool $useHttps = false,
+        bool $verifySsl = true,
         ?LoggerInterface $logger = null
     ) {
         InputValidator::validateHost($host);
@@ -45,11 +47,51 @@ class WinRmClient
         $this->host = $host;
         $this->port = $port;
         $this->useHttps = $useHttps;
+        $this->verifySsl = $verifySsl;
         $this->username = $username;
         $this->password = $password;
         $this->logger = $logger ?? new SimpleLogger();
         $protocol = $useHttps ? 'https' : 'http';
         $this->endpoint = sprintf('%s://%s:%d/wsman', $protocol, $host, $port);
+    }
+
+    /**
+     * Switch the endpoint between HTTP (5985) and HTTPS (5986)
+     *
+     * If no explicit port was set, the WinRM default port for the selected
+     * protocol is applied. The endpoint URL is rebuilt accordingly.
+     *
+     * @param bool $useHttps Whether to use HTTPS
+     * @return self
+     */
+    public function setUseHttps(bool $useHttps): self
+    {
+        // Move off the default port of the previous protocol if it was still in use
+        if ($this->port === ($this->useHttps ? 5986 : 5985)) {
+            $this->port = $useHttps ? 5986 : 5985;
+        }
+
+        $this->useHttps = $useHttps;
+        $protocol = $useHttps ? 'https' : 'http';
+        $this->endpoint = sprintf('%s://%s:%d/wsman', $protocol, $this->host, $this->port);
+
+        return $this;
+    }
+
+    /**
+     * Enable or disable TLS certificate verification for HTTPS endpoints
+     *
+     * Verification is enabled by default. Disable it only on trusted networks
+     * with self-signed certificates, as disabling it exposes the connection to
+     * man-in-the-middle attacks.
+     *
+     * @param bool $verify Whether to verify the server certificate
+     * @return self
+     */
+    public function setVerifySsl(bool $verify): self
+    {
+        $this->verifySsl = $verify;
+        return $this;
     }
 
     public function executePowerShell(string $script): RemoteCommandOutput
@@ -205,8 +247,8 @@ XML;
             'Expect:',
         ]);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verifySsl);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->verifySsl ? 2 : 0);
 
         $response = curl_exec($ch);
         $errno = curl_errno($ch);

@@ -47,10 +47,12 @@ abstract class AbstractBsdOps extends AbstractOps
         if ($sudoPassword !== null) {
             $encoded = base64_encode($sudoPassword);
             $tmpFile = '/tmp/._sudo_' . bin2hex(random_bytes(8));
-            $script = 'echo ' . self::escapeShellArgument($encoded) . ' | base64 --decode > ' . self::escapeShellArgument($tmpFile)
-                . ' && chmod 400 ' . self::escapeShellArgument($tmpFile)
-                . ' && sudo -S sh -lc ' . self::escapeShellArgument($command) . ' < ' . self::escapeShellArgument($tmpFile)
-                . '; rm -f ' . self::escapeShellArgument($tmpFile);
+            $tmp = self::escapeShellArgument($tmpFile);
+            // Preserve the command's exit code; the trailing rm must not mask it.
+            $script = 'echo ' . self::escapeShellArgument($encoded) . ' | base64 --decode > ' . $tmp
+                . ' && chmod 400 ' . $tmp
+                . ' && sudo -S sh -lc ' . self::escapeShellArgument($command) . ' < ' . $tmp
+                . '; __rc=$?; rm -f ' . $tmp . '; exit $__rc';
             return $this->remoteExec($script);
         }
 

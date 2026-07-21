@@ -5,4 +5,3 @@ parameters:
     ignoreErrors:
         - '#(Function|Constant) ssh2_#'
         - '#Property Cyonima\\Ops\\AbstractOps::\$(ssh(Connection|Tunnel)|sftp) has no type specified#'
-        - '#Property Cyonima\\Ops\\Windows\\WinRmClient::\$(host|port|useHttps) is never#'
