@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "Cyonima.ops.lib", "Cyonima.ops.lib.msbuildproj", "{0830DB93-8396-437D-9B0B-53E599A6ADBB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0830DB93-8396-437D-9B0B-53E599A6ADBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0830DB93-8396-437D-9B0B-53E599A6ADBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0830DB93-8396-437D-9B0B-53E599A6ADBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0830DB93-8396-437D-9B0B-53E599A6ADBB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02A86B3E-6F62-49ED-8D86-019087F3B282}
+	EndGlobalSection
+EndGlobal

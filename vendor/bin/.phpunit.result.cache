@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"Cyonima\\Ops\\Tests\\SimpleLoggerTest::testLogCreatesFileAndAppendsEntries":0.003,"Cyonima\\Ops\\Tests\\SimpleLoggerTest::testSetMinLogLevelRejectsInvalidLevel":0}}
